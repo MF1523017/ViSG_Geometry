@@ -37,12 +37,18 @@ include_directories(${CERES_INCLUDE_DIRS})
 
 add_library(feature SHARED	${PROJECT_SOURCE_DIR}/src/feature.cpp) 
 add_library(matcher SHARED	${PROJECT_SOURCE_DIR}/src/matcher.cpp) 
+add_library(pose SHARED	${PROJECT_SOURCE_DIR}/src/pose.cpp) 
+add_library(camera SHARED	${PROJECT_SOURCE_DIR}/src/camera.cpp) 
+add_library(util SHARED	${PROJECT_SOURCE_DIR}/src/util.cpp) 
 
 
-add_executable(VISGSFM ${PROJECT_SOURCE_DIR}/test/matcher_test.cpp)
+add_executable(VISGSFM ${PROJECT_SOURCE_DIR}/test/pose_test.cpp)
 
 target_link_libraries(VISGSFM ${Sophus_LIBRARIES})
 target_link_libraries(VISGSFM ${OpenCV_LIBS})
 target_link_libraries(VISGSFM ${CERES_LIBRARIES})
 target_link_libraries(VISGSFM feature)
 target_link_libraries(VISGSFM matcher)
+target_link_libraries(VISGSFM pose)
+target_link_libraries(VISGSFM camera)
+target_link_libraries(VISGSFM util)
