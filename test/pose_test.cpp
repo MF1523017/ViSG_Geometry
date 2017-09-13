@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: pose_test.cpp
 	> Author: lipei
-	> Mail: b111180082@163.com 
+	> Mail: b111180082@163.com
 	> Created Time: 2017年09月10日 星期日 20时03分06秒
  ************************************************************************/
 
@@ -26,10 +26,10 @@ int main(int argc,char **argv){
 	ff1.extract(img1);
 	VISG::Feature ff2;
 	ff2.extract(img2);
-	
+
 	cout << "feature match " << endl;
 	VISG::Matcher mt;
-	mt.match(ff1.descriptors(),ff2.descriptors(),ff1.key_points(),ff2.key_points());
+	mt.match(ff1.descriptors(),ff2.descriptors());
 
 	cout << "draw result " << endl;
 
@@ -42,6 +42,6 @@ int main(int argc,char **argv){
 	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
 	cv::imshow("feature match" ,img_match);
 	cv::imshow("inlier feature match" ,img_good_match);
-	cv::waitKey(0);	
+	cv::waitKey(0);
 	return 0;
 }
