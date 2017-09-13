@@ -1,14 +1,14 @@
 /*************************************************************************
 	> File Name: ../src/matcher.cpp
 	> Author: lipei
-	> Mail: b111180082@163.com 
+	> Mail: b111180082@163.com
 	> Created Time: 2017年09月11日 星期一 10时50分08秒
  ************************************************************************/
 #include "matcher.h"
 
 namespace VISG{
 
-	void Matcher::match(const cv::Mat &descriptors1,const cv::Mat &descriptors2, const std::vector<cv::KeyPoint> &key_points1,const std::vector<cv::KeyPoint> &key_points2){
+	void Matcher::match(const cv::Mat &descriptors1,const cv::Mat &descriptors2){
 		if(descriptors1.type() == descriptors2.type() &&
 				descriptors1.cols == descriptors2.cols){
 #ifdef USE_SIFT
@@ -19,12 +19,13 @@ namespace VISG{
 #endif
 			matcher.match(descriptors1,descriptors2,matches_);
 		}
+	/*
 		// get inliers with homography
     	if(matches_.size() < 8){// 8 points method
 			std::cout << "matches is less 8 " << std::endl;
     		return;
 		}
-		
+
     	std::vector<cv::Point2f> src_points(matches_.size());
     	std::vector<cv::Point2f> dst_points(matches_.size());
     	for(size_t i = 0; i < matches_.size(); ++i){
@@ -34,12 +35,12 @@ namespace VISG{
 		std::cout << "findHomography " << std::endl;
 		std::vector<unsigned char> inliers_mask;
 		auto H = cv::findHomography(src_points,dst_points,cv::RANSAC,5,inliers_mask);
-		
+
 		for(size_t i = 0; i < inliers_mask.size(); ++i){
 			if(inliers_mask[i])
 				inlier_matches_.push_back(matches_[i]);
 		}
-
+*/
 	}
 
 }

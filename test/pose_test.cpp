@@ -1,5 +1,5 @@
 /*************************************************************************
-	> File Name: matcher_test.cpp
+	> File Name: pose_test.cpp
 	> Author: lipei
 	> Mail: b111180082@163.com
 	> Created Time: 2017年09月10日 星期日 20时03分06秒
@@ -7,6 +7,7 @@
 
 #include "feature.h"
 #include "matcher.h"
+#include "pose.h"
 #include <iostream>
 using namespace std;
 
@@ -32,11 +33,15 @@ int main(int argc,char **argv){
 
 	cout << "draw result " << endl;
 
+	VISG::Camera cam(458.654,457.296,367.215,248.375);
+	VISG::Pose pose;
+	pose.estimate(ff1.key_points(),ff2.key_points(),mt.matches(),cam);
+
 	cv::Mat img_match, img_good_match;
 	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.matches(),img_match);
-	// cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
+	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
 	cv::imshow("feature match" ,img_match);
-	// cv::imshow("inlier feature match" ,img_good_match);
+	cv::imshow("inlier feature match" ,img_good_match);
 	cv::waitKey(0);
 	return 0;
 }
