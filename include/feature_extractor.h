@@ -8,18 +8,24 @@
 #define FEATURE_EXTRACTOR_H
 
 #include "common.h"
-#include "common.h"
 #include "feature.h"
 #include "matcher.h"
 #include "pose.h"
 #include "camera.h"
+#include "util.h"
 
 namespace VISG{
+struct FeatureResult{
+	FeatureResult(KeyPoints key_points1,KeyPoints key_points2,DMatches matches):key_points1_(key_points1),key_points2_(key_points2),matches_(matches){}
+	KeyPoints key_points1_;
+	KeyPoints key_points2_;
+	DMatches matches_;
+};
 
 class FeatureExtractor{
 public:
 	FeatureExtractor() = default;
-	void extract_match(cv::Mat &img1,cv::Mat &img2);
+	FeatureResult extract_match(cv::Mat &img1,cv::Mat &img2);
 	FeaturePairs features_pairs()const{
 		return features_pairs_;
 	}

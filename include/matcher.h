@@ -16,11 +16,11 @@ namespace VISG{
 	class Matcher{
 	public:
 		void match(const cv::Mat &descriptors1,const cv::Mat &descriptors2);
-		std::vector<cv::DMatch> matches() const {
+		DMatches matches() const {
 			return matches_;
 		}
 	private:
-		std::vector<cv::DMatch> matches_;
+		DMatches matches_;
 	};
 
 

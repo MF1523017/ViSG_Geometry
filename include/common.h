@@ -12,8 +12,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <utility>
+#include <cmath>
+
 
 
 
@@ -23,6 +26,8 @@
 #include <opencv2/xfeatures2d.hpp>
 #endif
 
-using FeaturePairs = std::vector<std::pair<cv::Point2d,cv::Point2d>>;
+using FeaturePairs = std::vector<std::pair<cv::KeyPoint,cv::KeyPoint>>;
+using KeyPoints = std::vector<cv::KeyPoint>;
+using DMatches = std::vector<cv::DMatch>;
 
 #endif // common.h

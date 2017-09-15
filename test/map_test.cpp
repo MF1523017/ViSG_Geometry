@@ -48,8 +48,7 @@ int main(int argc,char **argv){
 	auto points1 = ff1.key_points();
 	auto points2 = ff2.key_points();
 	auto matches = mt.matches();
-	cv::Mat inliers;
-	pose.estimate(points1,points2,matches,cam,inliers);
+	pose.estimate(points1,points2,matches,cam);
 
 	cout << "[inliers]: row: " << inliers.rows << ", col: " << inliers.cols << endl;
 

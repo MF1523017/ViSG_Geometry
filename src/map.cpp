@@ -10,19 +10,23 @@
 namespace VISG{
 
 void Map::triangulation(const FeaturePairs &features_pairs,const Camera &cam,const Pose &pose){
+	if(features_pairs.empty()){
+		std::cout << "features_pairs empty " << std::endl;
+		return;
+	}
 	cv::Mat T1 = (cv::Mat_<double>(3,4) <<
 			1,0,0,0,
 			0,1,0,0,
 			0,0,1,0);
 	cv::Mat T2 = pose.cvPoseMatrix3_4();
-	std::cout << "[triangulation] T2:" << T2 << std::endl;
+	// std::cout << "[triangulation] T2:" << T2 << std::endl;
 	cv::Mat K = cam.K();
 	size_t matches_size = features_pairs.size();
 	std::vector<cv::Point2d> points1(matches_size);
 	std::vector<cv::Point2d> points2(matches_size);
 	for(size_t i = 0; i < matches_size; ++i){
-		points1[i] = pixel2cam(features_pairs[i].first,K);
-		points2[i] = pixel2cam(features_pairs[i].second,K);
+		points1[i] = pixel2cam(features_pairs[i].first.pt,K);
+		points2[i] = pixel2cam(features_pairs[i].second.pt,K);
 	}
 
 	cv::Mat points_4d;

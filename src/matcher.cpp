@@ -19,28 +19,6 @@ namespace VISG{
 #endif
 			matcher.match(descriptors1,descriptors2,matches_);
 		}
-	/*
-		// get inliers with homography
-    	if(matches_.size() < 8){// 8 points method
-			std::cout << "matches is less 8 " << std::endl;
-    		return;
-		}
-
-    	std::vector<cv::Point2f> src_points(matches_.size());
-    	std::vector<cv::Point2f> dst_points(matches_.size());
-    	for(size_t i = 0; i < matches_.size(); ++i){
-			src_points[i] = key_points1[matches_[i].trainIdx].pt;
-			dst_points[i] = key_points2[matches_[i].queryIdx].pt;
-		}
-		std::cout << "findHomography " << std::endl;
-		std::vector<unsigned char> inliers_mask;
-		auto H = cv::findHomography(src_points,dst_points,cv::RANSAC,5,inliers_mask);
-
-		for(size_t i = 0; i < inliers_mask.size(); ++i){
-			if(inliers_mask[i])
-				inlier_matches_.push_back(matches_[i]);
-		}
-*/
 	}
 
 }
