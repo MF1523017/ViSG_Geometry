@@ -11,11 +11,10 @@ namespace VISG{
 /*
 	@brief:estimate pose from two frame features using recoverPose
 */
-void Pose::estimate(const std::vector<cv::KeyPoint> &key_points1,
-	const std::vector<cv::KeyPoint> &key_points2,
-	const std::vector<cv::DMatch> & matches,
-	const Camera &cam,
-	cv::Mat &inlers){
+void Pose::estimate(const KeyPoints &key_points1,
+	const KeyPoints &key_points2,
+	const DMatches & matches,
+	const Camera &cam){
 	std::vector<cv::Point2f> points1(matches.size());
 	std::vector<cv::Point2f> points2(matches.size());
 	for(size_t i = 0; i < matches.size(); ++i){
@@ -27,9 +26,8 @@ void Pose::estimate(const std::vector<cv::KeyPoint> &key_points1,
 			cam.K().at<double>(1,1)) / 2;
 	cv::Point2d principal_point(cam.K().at<double>(0,2),cam.K().at<double>(1,2));
 
+	cv::Mat inlers;
 	cv::Mat E = cv::findEssentialMat(points1,points2,focal_length,principal_point,cv::RANSAC,0.999,1.0,inlers);
-	std::cout << "essential matrix:" << E << std::endl;
-
 	cv::recoverPose(E,points1,points2,R_,t_,focal_length,principal_point,inlers);
 	cv::Mat Rvec;
 	cv::Rodrigues(R_,Rvec);
@@ -39,20 +37,19 @@ void Pose::estimate(const std::vector<cv::KeyPoint> &key_points1,
 /*
 	@brief:estimate pose from two frame features using recoverPose
 */
-void Pose::estimate(const FeaturePairs &features_pairs,const Camera &cam,cv::Mat &inlers){
+void Pose::estimate(const FeaturePairs &features_pairs,const Camera &cam){
 	std::vector<cv::Point2f> points1(features_pairs.size());
 	std::vector<cv::Point2f> points2(features_pairs.size());
 	for(size_t i = 0; i < features_pairs.size(); ++i){
-		points1[i] = features_pairs[i].first;
-		points2[i] = features_pairs[i].second;
+		points1[i] = features_pairs[i].first.pt;
+		points2[i] = features_pairs[i].second.pt;
 	}
 	int focal_length = static_cast<int>(cam.K().at<double>(0,0) +
 			cam.K().at<double>(1,1)) / 2;
 	cv::Point2d principal_point(cam.K().at<double>(0,2),cam.K().at<double>(1,2));
 
+	cv::Mat inlers;
 	cv::Mat E = cv::findEssentialMat(points1,points2,focal_length,principal_point,cv::RANSAC,0.999,1.0,inlers);
-	std::cout << "essential matrix:" << E << std::endl;
-
 	cv::recoverPose(E,points1,points2,R_,t_,focal_length,principal_point,inlers);
 	cv::Mat Rvec;
 	cv::Rodrigues(R_,Rvec);

@@ -39,10 +39,10 @@ void video2images(const string &video_name,const string &image_dir){
 /*
  * @brief: x = K * X ==> K' * x
  * */
-cv::Point2d pixel2cam(const cv::Point2d &p, const cv::Mat & K){
+cv::Point2d pixel2cam(const cv::Point2f &p, const cv::Mat & K){
 	return cv::Point2d(
-			(p.x - K.at<double>(0,2)) / K.at<double>(0,0),
-			(p.y - K.at<double>(1,2)) / K.at<double>(1,1)
+			(static_cast<double>(p.x) - K.at<double>(0,2)) / K.at<double>(0,0),
+			(static_cast<double>(p.y) - K.at<double>(1,2)) / K.at<double>(1,1)
 			);
 }
 /*
@@ -56,6 +56,22 @@ cv::Mat cvMatrix3_4(const Pose &pose){
 			R.at<double>(0,0),R.at<double>(0,1),R.at<double>(0,2),t.at<double>(0,0),
 			R.at<double>(1,0),R.at<double>(1,1),R.at<double>(1,2),t.at<double>(1,0),
 			R.at<double>(2,0),R.at<double>(2,1),R.at<double>(2,2),t.at<double>(2,0));
+}
+
+/*
+* @brief compute the parallax from the correspondences
+*/
+double parallax(const FeaturePairs & features_pairs){
+	if(features_pairs.empty())
+		return -1;
+	double sum = 0;
+	for(size_t i = 0; i < features_pairs.size(); ++i){
+		auto p1 = features_pairs[i].first.pt;
+		auto p2 = features_pairs[i].second.pt;
+		auto para = p2 - p1;
+		sum += fabs(para.x) + fabs(para.y);
+	}
+	return sum / features_pairs.size();
 }
 
 }

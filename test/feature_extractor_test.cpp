@@ -7,6 +7,7 @@
 
 #include "feature_extractor.h"
 #include "map.h"
+#include "util.h"
 #include <fstream>
 using namespace std;
 
@@ -17,13 +18,16 @@ void savePoints(const string &name,std::vector<cv::Point3d> points){
 	}
 }
 
+
+
 int main(int argc,char **argv){
 	// if(argc != 3){
 	// 	std::cout << "usage: map_test img_1 img2" << std::endl;
 	// 	return 0;
 	// }
-	const string file_name1("/home/lipei/data/left.png");
-	const string file_name2("/home/lipei/data/right.png");
+
+	const string file_name1("/home/lipei/data/left.jpg");
+	const string file_name2("/home/lipei/data/right.jpg");
 	cv::Mat img1 = cv::imread(file_name1);
 	cv::Mat img2 = cv::imread(file_name2);
 //	cv::Mat gray1;
@@ -40,21 +44,14 @@ int main(int argc,char **argv){
 	// VISG::Camera cam(2064.259,2077.247,1009.855,1321.547);
 
 	VISG::Pose pose;
-
-	cv::Mat inliers;
 	auto features_pairs =  extractor.features_pairs();
-	pose.estimate(features_pairs,cam,inliers);
-	cout << "[inliers]: row: " << inliers.rows << ", col: " << inliers.cols << endl;
-	FeaturePairs good_features_pairs;
-	for(size_t i = 0; i < inliers.rows; ++i){
-		if(inliers.at<int>(i,0)){
-			good_features_pairs.push_back(features_pairs[i]);
-		}
-	}
+	pose.estimate(features_pairs,cam);
 	VISG::Map map;
-	map.triangulation(good_features_pairs,cam,pose);
+	map.triangulation(features_pairs,cam,pose);
 	const string points_file("/home/lipei/data/points.txt");
 	savePoints(points_file,map.map_points());
+	cout << "[parallax]: " << VISG::parallax(features_pairs) << endl;
+	cv::waitKey(0);
 	return 0;
 
 

@@ -9,10 +9,11 @@
 
 namespace VISG{
 
-void FeatureExtractor::extract_match(cv::Mat &img1,cv::Mat &img2){
-	std::vector<cv::KeyPoint> key_points1,key_points2;
+FeatureResult  FeatureExtractor::extract_match(cv::Mat &img1,cv::Mat &img2){
+	KeyPoints key_points1,key_points2;
 	cv::Mat descriptors1,descriptors2;
-	std::vector<cv::DMatch> matches;
+	DMatches matches;
+	DMatches good_matches;
 #ifdef USE_ORB
 	cv::Ptr<cv::ORB> orb = cv::ORB::create();
 	// cv::Ptr<cv::ORB> orb = cv::ORB::create(500,1.2f,8,31,0,2,cv::ORB::HARRIS_SCORE,31,20);
@@ -32,17 +33,21 @@ void FeatureExtractor::extract_match(cv::Mat &img1,cv::Mat &img2){
 #endif
 
 	matcher.match(descriptors1,descriptors2,matches);
-
-	cv::Mat img_match, img_good_match;
-	cv::drawMatches(img1,key_points1,img2,key_points2,matches,img_match);
+	auto min_dis = (*(min_element(matches.begin(),matches.end(),matches_dis_cmp))).distance;
+	// cout << "min_dis " << min_dis << endl;
+	for(size_t i = 0; i < matches.size(); ++i){
+		if(matches[i].distance <= std::max(static_cast<double>(2 * min_dis) ,30.0)){
+			good_matches.push_back(matches[i]);
+			features_pairs_.push_back(std::make_pair(key_points1[matches[i].queryIdx],key_points2[matches[i].trainIdx]));
+		}
+	}
+	cv::Mat img_match;
+	cv::drawMatches(img1,key_points1,img2,key_points2,good_matches,img_match);
 	cv::namedWindow("feature match",0);
 	cv::imshow("feature match" ,img_match);
-	cv::waitKey(0);
+	cv::waitKey(5);
 
-	features_pairs_.resize(matches.size());
-	for(size_t i = 0; i < matches.size(); ++i){
-		features_pairs_[i] = std::make_pair(key_points1[matches[i].queryIdx].pt,key_points2[matches[i].trainIdx].pt);
-	}
-
+	FeatureResult result(key_points1,key_points2,matches);
+	return result;
 }
 }
