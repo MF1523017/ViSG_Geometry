@@ -23,20 +23,22 @@ int main(int argc,char **argv){
 
 	VISG::Feature ff1;
 	ff1.extract(img1);
-	VISG::Feature ff2;
-	ff2.extract(img2);
-
+	auto descriptors1 = ff1.descriptors();
+	auto key_points1 = ff1.key_points();
+	ff1.extract(img2);
+	auto descriptors2 = ff1.descriptors();
+	auto key_points2 = ff1.key_points();
 	cout << "feature match " << endl;
 	VISG::Matcher mt;
-	mt.match(ff1.descriptors(),ff2.descriptors());
+	mt.match(descriptors1,descriptors2);
 
 	cout << "draw result " << endl;
 
 	cv::Mat img_match, img_good_match;
-	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.matches(),img_match);
-	// cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
+	cv::drawMatches(img1,key_points1,img2,key_points2,mt.matches(),img_match);
+	cv::drawMatches(img1,key_points1,img2,key_points2,mt.inlier_matches(),img_good_match);
 	cv::imshow("feature match" ,img_match);
-	// cv::imshow("inlier feature match" ,img_good_match);
+	cv::imshow("inlier feature match" ,img_good_match);
 	cv::waitKey(0);
 	return 0;
 }
