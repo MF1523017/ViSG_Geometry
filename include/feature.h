@@ -13,7 +13,7 @@ namespace VISG{
 
 	class Feature{
 		public:
-			Feature();
+			Feature() = default;
 			void extract(cv::Mat &img);
 			KeyPoints key_points()const {
 				return key_points_;
@@ -23,9 +23,10 @@ namespace VISG{
 			}
 
 		private:
-			cv::Ptr<cv::FeatureDetector> detector_;
 			KeyPoints key_points_;
 			cv::Mat descriptors_;
+
+
 	};
 
 }

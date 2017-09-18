@@ -7,33 +7,28 @@
 
 namespace VISG{
 
-
-Feature::Feature(){
-#ifdef USE_ORB
-	detector_ = cv::ORB::create();
-#endif
-
-#ifdef USE_SIFT
-	detector_ = cv::xfeatures2d::SIFT::create();
-#endif
-
-}
 void Feature::extract(cv::Mat &img){
 	if(img.empty())
 		assert(false);
-	key_points_.clear();//clear old key_points
-	descriptors_.release();// clear old descriptors
-	detector_->detect(img,key_points_);
-	detector_->compute(img, key_points_,descriptors_);
-
-#ifdef TEST
-	cv::Mat img_key_points;
-	cv::drawKeypoints(img,key_points_,img_key_points,cv::Scalar::all(-1),cv::DrawMatchesFlags::DEFAULT);
-
-	cv::namedWindow("keyPoints",cv::WINDOW_AUTOSIZE);
-	cv::imshow("keyPoints",img_key_points);
-	cv::waitKey(0);
-	cv::destroyAllWindows();
+#ifdef USE_ORB
+	cv::Ptr<cv::ORB> orb = cv::ORB::create();
+	// cv::Ptr<cv::ORB> orb = cv::ORB::create(500,1.2f,8,31,0,2,cv::ORB::HARRIS_SCORE,31,20);
+	orb->detect(img,key_points_);
+	orb->compute(img, key_points_,descriptors_);
 #endif
+
+#ifdef USE_SIFT
+	// cv::Ptr<cv::Feature2D> sift = cv::xfeatures2d::SIFT::create(0,3,0.04,10);
+	cv::Ptr<cv::Feature2D> sift = cv::xfeatures2d::SIFT::create();
+	sift->detectAndCompute(img,cv::noArray(),key_points_,descriptors_);
+#endif
+//
+//	cv::Mat img_key_points;
+//	cv::drawKeypoints(img,key_points_,img_key_points,cv::Scalar::all(-1),cv::DrawMatchesFlags::DEFAULT);
+//
+//	cv::namedWindow("keyPoints",cv::WINDOW_AUTOSIZE);
+//	cv::imshow("keyPoints",img_key_points);
+//	cv::waitKey(0);
+//	cv::destroyAllWindows();
 }
 }

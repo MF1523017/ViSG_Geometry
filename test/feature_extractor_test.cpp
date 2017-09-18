@@ -26,8 +26,8 @@ int main(int argc,char **argv){
 	// 	return 0;
 	// }
 
-	const string file_name1("/home/lipei/data/left.png");
-	const string file_name2("/home/lipei/data/right.png");
+	const string file_name1("/home/lipei/data/left.jpg");
+	const string file_name2("/home/lipei/data/right.jpg");
 	cv::Mat img1 = cv::imread(file_name1);
 	cv::Mat img2 = cv::imread(file_name2);
 //	cv::Mat gray1;
