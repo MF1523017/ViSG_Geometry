@@ -46,7 +46,7 @@ add_library(geometry SHARED ${PROJECT_SOURCE_DIR}/src/geometry.cpp)
 add_library(sfm SHARED ${PROJECT_SOURCE_DIR}/src/sfm.cpp)
 
 
-add_executable(VISGSFM ${PROJECT_SOURCE_DIR}/test/pose_test.cpp)
+add_executable(VISGSFM ${PROJECT_SOURCE_DIR}/test/sfm_test.cpp)
 
 target_link_libraries(VISGSFM ${Sophus_LIBRARIES})
 target_link_libraries(VISGSFM ${OpenCV_LIBS})

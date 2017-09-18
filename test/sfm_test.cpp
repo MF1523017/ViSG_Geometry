@@ -44,7 +44,7 @@ int main(int argc,char **argv){
  VISG::Camera cam(458.654,457.296,367.215,248.375);
  // VISG::Camera cam(2064.259,2077.247,1009.855,1321.547);
  const string image_dir(file_dir + "/data/");
- VISG::SFM sfm;
+ VISG::SFM sfm(cam);
 #ifdef SKIP_FRAMES
  for(size_t i = 0; i < images.size() - SKIP_FRAMES ; i = i + SKIP_FRAMES){
 	 const string file_name1(image_dir + images[i]);

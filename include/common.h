@@ -22,7 +22,7 @@
 
 
 
-#define TEST
+// #define TEST
 #define USE_ORB
 // #define USE_SIFT
 #ifdef USE_SIFT

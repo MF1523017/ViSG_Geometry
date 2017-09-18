@@ -79,6 +79,7 @@ void SFM::match(const size_t pre_idx,const size_t next_idx,FeaturePairs &feature
 	for(size_t i = 0; i < inlier_matches.size(); ++i){
 		features_pairs[i] = std::make_pair(key_points1[inlier_matches[i].queryIdx],key_points2[inlier_matches[i].trainIdx]);
 	}
+	cv::waitKey(0);
 }
 
 }
