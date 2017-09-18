@@ -42,9 +42,11 @@ add_library(camera SHARED	${PROJECT_SOURCE_DIR}/src/camera.cpp)
 add_library(util SHARED	${PROJECT_SOURCE_DIR}/src/util.cpp)
 add_library(map SHARED	${PROJECT_SOURCE_DIR}/src/map.cpp)
 add_library(feature_extractor SHARED	${PROJECT_SOURCE_DIR}/src/feature_extractor.cpp)
+add_library(geometry SHARED ${PROJECT_SOURCE_DIR}/src/geometry.cpp)
+add_library(sfm SHARED ${PROJECT_SOURCE_DIR}/src/sfm.cpp)
 
 
-add_executable(VISGSFM ${PROJECT_SOURCE_DIR}/test/feature_extractor_test.cpp)
+add_executable(VISGSFM ${PROJECT_SOURCE_DIR}/test/pose_test.cpp)
 
 target_link_libraries(VISGSFM ${Sophus_LIBRARIES})
 target_link_libraries(VISGSFM ${OpenCV_LIBS})
@@ -56,3 +58,5 @@ target_link_libraries(VISGSFM camera)
 target_link_libraries(VISGSFM util)
 target_link_libraries(VISGSFM map)
 target_link_libraries(VISGSFM feature_extractor)
+target_link_libraries(VISGSFM geometry)
+target_link_libraries(VISGSFM sfm)
