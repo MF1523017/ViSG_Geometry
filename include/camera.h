@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: camera.h
 	> Author: lipei
-	> Mail: b111180082@163.com 
+	> Mail: b111180082@163.com
 	> Created Time: 2017年09月11日 星期一 17时24分44秒
  ************************************************************************/
 
@@ -13,6 +13,10 @@ namespace VISG{
 class Camera{
 public:
 	Camera(double fx,double fy,double cx,double cy);
+	Camera(const Camera &rhs){
+		*this = rhs;		
+	}
+	Camera &operator = (const Camera &rhs);
 	cv::Mat K() const {
 		return K_;
 	}
