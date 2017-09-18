@@ -20,8 +20,6 @@ cv::Point2d pixel2cam(const cv::Point2f &p, const cv::Mat & K);
 
 cv::Mat cvMatrix3_4(const Pose &pose);
 
-
-
 double parallax(const FeaturePairs & features_pairs);
 
 bool matches_dis_cmp(const cv::DMatch &lhs,const cv::DMatch &rhs){

@@ -16,14 +16,12 @@ namespace VISG{
 
 class Pose{
 public:
-	Pose();
 	void estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,
 		const DMatches &matches,
 		const Camera &cam);
 
 	void estimate(const FeaturePairs &features_pairs,const Camera &cam);
-	void estimate(const FeaturePairs &features_pairs,const cv::Mat &K);
 	void estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
 	cv::Mat R()const {
 		return R_;
@@ -36,16 +34,12 @@ public:
 	cv::Mat t()const {
 		return t_;
 	}
+
 	cv::Mat cvPoseMatrix3_4()const;
-	Eigen::Matrix3d EigenR()const;
-	Eigen::Vector3d Eigent()const;
-	Eigen::Matrix<double,3,4> EigenPoseMatrix3_4()const;
 
 private:
 	cv::Mat R_;
 	cv::Mat t_;
-
-
 };
 
 
