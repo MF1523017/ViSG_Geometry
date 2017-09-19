@@ -111,6 +111,9 @@ void SFM::run(Frame::Ptr p_frame){
 		p_frame_cur_ = p_frame;
 		feature_extract(p_frame);
 		tracking();
+		if(p_frame_cur_ == p_frame_ref_){
+			feature_extract(p_frame);
+		}
 	}else{
 		std::cout << "[SFM::run] lost error! " << std::endl;
 		return;
