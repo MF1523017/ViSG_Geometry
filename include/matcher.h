@@ -15,6 +15,7 @@ namespace VISG{
 
 	class Matcher{
 	public:
+		using Ptr = std::shared_ptr<Matcher>;
 		Matcher();
 		void match(const cv::Mat &descriptors1,const cv::Mat &descriptors2);
 		DMatches matches() const {

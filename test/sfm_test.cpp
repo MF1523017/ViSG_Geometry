@@ -12,7 +12,7 @@
 #include <fstream>
 using namespace std;
 
-#define SKIP_FRAMES 10
+// #define SKIP_FRAMES 10
 
 void savePoints(const string &name,std::vector<cv::Point3d> points){
  ofstream out(name);
@@ -60,7 +60,8 @@ int main(int argc,char **argv){
 		 cout << "error" << endl;
 		 return -1;
 	 }
-	 sfm.run(img1);
+	 VISG::Frame::Ptr p_frame(new VISG::Frame(img1,i));
+	 sfm.run(p_frame);
  }
  return 0;
 

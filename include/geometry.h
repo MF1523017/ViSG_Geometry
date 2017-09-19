@@ -8,12 +8,13 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 #include "common.h"
+#include "frame.h"
 
 namespace VISG{
 
 class Geometry{
 public:
-	virtual void run(cv::Mat &img) = 0;
+	virtual void run(Frame::Ptr p_frame) = 0;
 };
 
 

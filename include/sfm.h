@@ -12,6 +12,7 @@
 #include "pose.h"
 #include "feature.h"
 #include "matcher.h"
+#include "frame.h"
 #include "geometry.h"
 namespace VISG{
 
@@ -24,19 +25,25 @@ public:
 	};
 	SFM(const Camera &cam);
 	~SFM();
-	virtual void run(cv::Mat &img);
-	void feature_extract(cv::Mat &img);
-	void match(const size_t pre_idx,const size_t next_idx,FeaturePairs &features_pairs);
+	virtual void run(Frame::Ptr p_frame);
+	void feature_extract(Frame::Ptr p_frame);
+	void match(FeaturePairs &features_pairs);
+
 private:
-	bool _init(const size_t pre_idx,const size_t next_idx);
+	bool _init();
 	States states_;
 	size_t image_count_;
-	std::shared_ptr<Camera> p_camera_;
-	std::shared_ptr<Pose> p_pose_;
-	std::shared_ptr<Feature> p_feature_;
-	std::shared_ptr<Matcher> p_matcher_;
-	std::vector<KeyPoints> all_key_points_;
-	std::vector<cv::Mat> all_descriptors_;
+	Camera::Ptr p_camera_;
+	Feature::Ptr p_feature_;
+	Matcher::Ptr p_matcher_;
+	Frame::Ptr p_frame_ref_;
+	Frame::Ptr p_frame_cur_;
+	KeyPoints key_points_ref_;
+	KeyPoints key_points_cur_;
+	cv::Mat descriptors_ref_;
+	cv::Mat descriptors_cur_;
+	// std::vector<KeyPoints> all_key_points_;
+	// std::vector<cv::Mat> all_descriptors_;
 };
 
 }

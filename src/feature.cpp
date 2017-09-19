@@ -18,7 +18,7 @@ Feature::Feature(){
 #endif
 
 }
-void Feature::extract(cv::Mat &img){
+void Feature::extract(const cv::Mat &img){
 	if(img.empty())
 		assert(false);
 	key_points_.clear();//clear old key_points

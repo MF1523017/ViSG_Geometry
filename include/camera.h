@@ -12,9 +12,10 @@ namespace VISG{
 
 class Camera{
 public:
+	using Ptr = std::shared_ptr<Camera>;
 	Camera(double fx,double fy,double cx,double cy);
 	Camera(const Camera &rhs){
-		*this = rhs;		
+		*this = rhs;
 	}
 	Camera &operator = (const Camera &rhs);
 	cv::Mat K() const {

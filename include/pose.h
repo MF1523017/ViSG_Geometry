@@ -16,6 +16,7 @@ namespace VISG{
 
 class Pose{
 public:
+	using Ptr = std::shared_ptr<Pose>;
 	Pose();
 	void estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,

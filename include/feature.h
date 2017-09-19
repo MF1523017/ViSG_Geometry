@@ -13,8 +13,9 @@ namespace VISG{
 
 	class Feature{
 		public:
+			using Ptr = std::shared_ptr<Feature>;
 			Feature();
-			void extract(cv::Mat &img);
+			void extract(const cv::Mat &img);
 			KeyPoints key_points()const {
 				return key_points_;
 			}
