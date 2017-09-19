@@ -74,4 +74,20 @@ double parallax(const FeaturePairs & features_pairs){
 	return sum / features_pairs.size();
 }
 
+/*
+* @brief convert cv::Point3d to Eigen::Vector3d
+*/
+Eigen::Vector3d cv2eigen_Vector3d(const cv::Point3d &p){
+	return Eigen::Vector3d(p.x, p.y, p.z);
+}
+
+/*
+* @brief: convert cv::Point3d to cv::Point3f
+*/
+cv::Point3f cvPointd2f(const cv::Point3d &p){
+	return cv::Point3f(static_cast<float>(p.x),
+										static_cast<float>(p.y),
+										static_cast<float>(p.z));
+}
+
 }

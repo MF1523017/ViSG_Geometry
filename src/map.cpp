@@ -32,7 +32,7 @@ void Map::triangulation(const FeaturePairs &features_pairs,const Camera &cam,con
 
 	cv::Mat points_4d;
 	cv::triangulatePoints(T1,T2,points1,points2,points_4d);
-
+	map_points_.clear();// clear old map points;
 	for(size_t i = 0; i < points_4d.cols; ++i){
 		cv::Mat x = points_4d.col(i);
 	//	std::cout << "[triangulation] x:" << x << std::endl;

@@ -13,9 +13,11 @@
 #include "feature.h"
 #include "matcher.h"
 #include "frame.h"
+#include "map.h"
 #include "geometry.h"
+#include "util.h"
 namespace VISG{
-
+	
 class SFM:public Geometry{
 public:
 	enum States{
@@ -27,8 +29,11 @@ public:
 	~SFM();
 	virtual void run(Frame::Ptr p_frame);
 	void feature_extract(Frame::Ptr p_frame);
-	void match(FeaturePairs &features_pairs);
-
+	IndexesPairs match(FeaturePairs &features_pairs);
+	bool tracking();
+	std::vector<Eigen::Vector3d> map_points()const{
+		return map_points_;
+	}
 private:
 	bool _init();
 	States states_;
@@ -38,10 +43,14 @@ private:
 	Matcher::Ptr p_matcher_;
 	Frame::Ptr p_frame_ref_;
 	Frame::Ptr p_frame_cur_;
+	Map::Ptr p_map_;
 	KeyPoints key_points_ref_;
 	KeyPoints key_points_cur_;
 	cv::Mat descriptors_ref_;
 	cv::Mat descriptors_cur_;
+	// Pairs2d_3d pairs2_3_;
+	PairsIdxPoint3d pairs_idx_point3d_;
+	std::vector<Eigen::Vector3d> map_points_;
 	// std::vector<KeyPoints> all_key_points_;
 	// std::vector<cv::Mat> all_descriptors_;
 };

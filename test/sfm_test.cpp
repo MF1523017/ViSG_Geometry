@@ -19,6 +19,15 @@ void savePoints(const string &name,std::vector<cv::Point3d> points){
  for(auto p: points){
 	 out << p.x << "," << p.y << "," << p.z << endl;
  }
+ out.close();
+}
+
+void savePoints(const string &name,std::vector<Eigen::Vector3d> points){
+	ofstream out(name);
+	for(auto p: points){
+		out << p.x() << "," << p.y() << "," << p.z() << endl;
+	}
+	out.close();
 }
 
 int main(int argc,char **argv){
@@ -63,8 +72,8 @@ int main(int argc,char **argv){
 	 VISG::Frame::Ptr p_frame(new VISG::Frame(img1,i));
 	 sfm.run(p_frame);
  }
+ // auto map_points = sfm.map_points();
+ const string points_file("/home/lipei/data/sfm_points.txt");
+ savePoints(points_file,sfm.map_points());
  return 0;
-
-
-
 }

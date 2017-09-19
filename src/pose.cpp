@@ -65,12 +65,14 @@ void Pose::estimate(const FeaturePairs &features_pairs,const cv::Mat &K){
 	std::cout << "t: " << std::endl << t_ << std::endl;
 #endif
 }
+
 /*
 	@brief:estimate pose from two frame features using recoverPose
 */
 void Pose::estimate(const FeaturePairs &features_pairs,const Camera &cam){
 	estimate(features_pairs,cam.K());
 }
+
 /*
 	@brief:estimate pose from correspondences(point2 <==> point3) using solvePnP
 */
