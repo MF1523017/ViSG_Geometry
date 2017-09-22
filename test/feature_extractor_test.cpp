@@ -37,7 +37,7 @@ int main(int argc,char **argv){
 	cout << "feature extraction " << endl;
 
 	VISG::FeatureExtractor extractor;
-	extractor.extract_match(img1,img2);
+	extractor.ExtractMatch(img1,img2);
 	cout << "draw result " << endl;
 
 	VISG::Camera cam(458.654,457.296,367.215,248.375);
@@ -45,9 +45,9 @@ int main(int argc,char **argv){
 
 	VISG::Pose pose;
 	auto features_pairs =  extractor.features_pairs();
-	pose.estimate(features_pairs,cam);
+	pose.Estimate(features_pairs,cam);
 	VISG::Map map;
-	map.triangulation(features_pairs,cam,pose);
+	map.Triangulation(features_pairs,cam,pose);
 	const string points_file("/home/lipei/data/points.txt");
 	savePoints(points_file,map.map_points());
 	cout << "[parallax]: " << VISG::parallax(features_pairs) << endl;

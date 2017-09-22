@@ -18,7 +18,7 @@ namespace VISG{
 #endif
 	}
 	//match
-	void Matcher::match(const cv::Mat &descriptors1,const cv::Mat &descriptors2){
+	void Matcher::Match(const cv::Mat &descriptors1,const cv::Mat &descriptors2){
 		if(descriptors1.type() == descriptors2.type() &&
 				descriptors1.cols == descriptors2.cols){
 			matches_.clear();//clear old match;

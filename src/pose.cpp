@@ -18,7 +18,7 @@ Pose::Pose(){
 /*
 	@brief:estimate pose from two frame features using recoverPose
 */
-void Pose::estimate(const KeyPoints &key_points1,
+void Pose::Estimate(const KeyPoints &key_points1,
 	const KeyPoints &key_points2,
 	const DMatches & matches,
 	const Camera &cam){
@@ -44,7 +44,7 @@ void Pose::estimate(const KeyPoints &key_points1,
 /*
 	@brief:estimate pose from two frame features using recoverPose
 */
-void Pose::estimate(const FeaturePairs &features_pairs,const cv::Mat &K){
+void Pose::Estimate(const FeaturePairs &features_pairs,const cv::Mat &K){
 	std::vector<cv::Point2f> points1(features_pairs.size());
 	std::vector<cv::Point2f> points2(features_pairs.size());
 	for(size_t i = 0; i < features_pairs.size(); ++i){
@@ -69,15 +69,15 @@ void Pose::estimate(const FeaturePairs &features_pairs,const cv::Mat &K){
 /*
 	@brief:estimate pose from two frame features using recoverPose
 */
-void Pose::estimate(const FeaturePairs &features_pairs,const Camera &cam){
-	estimate(features_pairs,cam.K());
+void Pose::Estimate(const FeaturePairs &features_pairs,const Camera &cam){
+	Estimate(features_pairs,cam.K());
 }
 
 /*
 	@brief:estimate pose from correspondences(point2 <==> point3) using solvePnP
 */
 
-void Pose::estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam){
+void Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam){
 	if(points2.size() != points3.size()){
 		std::cout << "correspondences error " << std::endl;
 		return;
@@ -87,6 +87,16 @@ void Pose::estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv
 	cv::Rodrigues(R_,Rvec);
 	std::cout << "Rvec: " << std::endl << Rvec << std::endl;
 	std::cout << "t: " << std::endl << t_ << std::endl;
+}
+
+void Pose::Estimate(const PnP &pnp,const Camera &cam){
+	std::vector<cv::Point2f> points2(pnp.size());
+	std::vector<cv::Point3f> points3(pnp.size());
+	for(size_t i = 0; i < pnp.size(); ++i){
+		points2[i] = pnp[i].first;
+		points3[i] = pnp[i].second;
+	}
+	Estimate(points2,points3,cam);
 }
 
 /*

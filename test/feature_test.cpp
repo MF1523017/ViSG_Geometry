@@ -15,6 +15,6 @@ int main(int argc,char **argv){
 	const string file_name("/home/lipei/data/arya.png");
 	cv::Mat img = cv::imread(file_name);
 	VISG::Feature ff;
-	ff.extract(img);
+	ff.Extract(img);
 	return 0;
 }

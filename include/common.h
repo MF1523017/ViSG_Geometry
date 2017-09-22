@@ -36,6 +36,7 @@ using DMatches = std::vector<cv::DMatch>;
 using PairsIdxPoint3d = std::map<size_t,cv::Point3d>;
 // using Pairs2d_3d = std::map<cv::KeyPoint,cv::Point3d>;
 using IndexesPairs = std::vector<std::pair<size_t,size_t>>;
+using PnP = std::vector<std::pair<cv::Point2f,cv::Point3f>>;//2d_3d
 // using IndexPoint3Pairs
 
 #endif // common.h

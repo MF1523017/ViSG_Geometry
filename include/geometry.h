@@ -14,7 +14,7 @@ namespace VISG{
 
 class Geometry{
 public:
-	virtual void run(Frame::Ptr p_frame) = 0;
+	virtual void Run(Frame::Ptr p_frame) = 0;
 };
 
 

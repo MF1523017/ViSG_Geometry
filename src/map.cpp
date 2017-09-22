@@ -9,7 +9,7 @@
 
 namespace VISG{
 
-void Map::triangulation(const FeaturePairs &features_pairs,const Camera &cam,const Pose &pose1,const Pose &pose2){
+void Map::Triangulation(const FeaturePairs &features_pairs,const Camera &cam,const Pose &pose1,const Pose &pose2){
 	if(features_pairs.empty()){
 		std::cout << "features_pairs empty " << std::endl;
 		return;

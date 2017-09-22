@@ -70,7 +70,7 @@ int main(int argc,char **argv){
 		 return -1;
 	 }
 	 VISG::Frame::Ptr p_frame(new VISG::Frame(img1,i));
-	 sfm.run(p_frame);
+	 sfm.Run(p_frame);
  }
  // auto map_points = sfm.map_points();
  const string points_file("/home/lipei/data/sfm_points.txt");

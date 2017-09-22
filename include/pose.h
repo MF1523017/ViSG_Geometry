@@ -18,14 +18,15 @@ class Pose{
 public:
 	using Ptr = std::shared_ptr<Pose>;
 	Pose();
-	void estimate(const KeyPoints &key_points1,
+	void Estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,
 		const DMatches &matches,
 		const Camera &cam);
 
-	void estimate(const FeaturePairs &features_pairs,const Camera &cam);
-	void estimate(const FeaturePairs &features_pairs,const cv::Mat &K);
-	void estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
+	void Estimate(const FeaturePairs &features_pairs,const Camera &cam);
+	void Estimate(const FeaturePairs &features_pairs,const cv::Mat &K);
+	void Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
+	void Estimate(const PnP &pnp,const Camera &cam);
 	cv::Mat R()const {
 		return R_;
 	}
