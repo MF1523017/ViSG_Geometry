@@ -24,8 +24,8 @@
 
 
 // #define TEST
-#define USE_ORB
-// #define USE_SIFT
+// #define USE_ORB
+#define USE_SIFT
 #ifdef USE_SIFT
 #include <opencv2/xfeatures2d.hpp>
 #endif
@@ -37,6 +37,12 @@ using PairsIdxPoint3d = std::map<size_t,cv::Point3d>;
 // using Pairs2d_3d = std::map<cv::KeyPoint,cv::Point3d>;
 using IndexesPairs = std::vector<std::pair<size_t,size_t>>;
 using PnP = std::vector<std::pair<cv::Point2f,cv::Point3f>>;//2d_3d
+
+using AllKeyPoints = std::vector<std::vector<cv::KeyPoint>>;
+using AllDescriptors = std::vector<cv::Mat>;
+using AllMatches = std::vector<std::vector<cv::DMatch>>;
+using MapPoints = std::vector<cv::Point3d>;
+
 // using IndexPoint3Pairs
 
 #endif // common.h

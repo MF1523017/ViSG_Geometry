@@ -9,7 +9,7 @@
 
 namespace VISG{
 
-void Map::Triangulation(const FeaturePairs &features_pairs,const Camera &cam,const Pose &pose1,const Pose &pose2){
+void Map::Triangulation(const FeaturePairs &features_pairs,const Pose &pose1,const Pose &pose2,const Camera &cam){
 	if(features_pairs.empty()){
 		std::cout << "features_pairs empty " << std::endl;
 		return;
@@ -36,6 +36,37 @@ void Map::Triangulation(const FeaturePairs &features_pairs,const Camera &cam,con
 	for(size_t i = 0; i < points_4d.cols; ++i){
 		cv::Mat x = points_4d.col(i);
 	//	std::cout << "[triangulation] x:" << x << std::endl;
+		if(fabs(x.at<double>(3.0)) < 1e-9)
+			x.at<double>(3.0) = 1e-9;
+		x /= x.at<double>(3,0);
+		map_points_.push_back(cv::Point3d(x.at<double>(0,0),x.at<double>(1,0),x.at<double>(2,0)));
+	}
+}
+
+/*
+* @brief triangulation
+*/
+void Map::Triangulation(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,
+	const Pose &pose1,const Pose &pose2,const Camera &cam){
+	cv::Mat T1 = pose1.cvPoseMatrix3_4();
+	cv::Mat T2 = pose2.cvPoseMatrix3_4();
+	// std::cout << "[triangulation] T2:" << T2 << std::endl;
+	cv::Mat K = cam.K();
+	size_t matches_size = points1.size();
+	std::vector<cv::Point2d> pointsd1(matches_size);
+	std::vector<cv::Point2d> pointsd2(matches_size);
+	for(size_t i = 0; i < matches_size; ++i){
+		pointsd1[i] = pixel2cam(points1[i],K);
+		pointsd2[i] = pixel2cam(points2[i],K);
+	}
+	cv::Mat points_4d;
+	cv::triangulatePoints(T1,T2,pointsd1,pointsd2,points_4d);
+	map_points_.clear();// clear old map points;
+	for(size_t i = 0; i < points_4d.cols; ++i){
+		cv::Mat x = points_4d.col(i);
+	//	std::cout << "[triangulation] x:" << x << std::endl;
+		if(fabs(x.at<double>(3.0)) < 1e-9)
+			x.at<double>(3.0) = 1e-9;
 		x /= x.at<double>(3,0);
 		map_points_.push_back(cv::Point3d(x.at<double>(0,0),x.at<double>(1,0),x.at<double>(2,0)));
 	}

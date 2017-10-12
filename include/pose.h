@@ -21,8 +21,9 @@ public:
 	void Estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,
 		const DMatches &matches,
-		const Camera &cam);
-
+		const Camera &cam,
+		std::vector<cv::Point2f> &points1,
+		std::vector<cv::Point2f> &points2);
 	void Estimate(const FeaturePairs &features_pairs,const Camera &cam);
 	void Estimate(const FeaturePairs &features_pairs,const cv::Mat &K);
 	void Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);

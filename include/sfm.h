@@ -2,67 +2,43 @@
 	> File Name: sfm.h
 	> Author: lipei
 	> Mail: b111180082@163.com
-	> Created Time: 2017年09月16日 星期六 13时37分28秒
+	> Created Time: 2017年09月26日 星期二 16时09分38秒
  ************************************************************************/
 
 #ifndef SFM_H
 #define SFM_H
 #include "common.h"
-#include "camera.h"
-#include "pose.h"
-#include "feature.h"
-#include "matcher.h"
-#include "frame.h"
-#include "map.h"
 #include "geometry.h"
-#include "util.h"
+#include "frame.h"
+#include "feature.h"
+#include "pose.h"
+
 namespace VISG{
 
 class SFM:public Geometry{
 public:
-	enum States{
-		INITIALIZATION = 0,
-		TRACKING,
-		LOST,
-	};
-	SFM(const Camera &cam);
+	using Ptr = std::shared_ptr<SFM>;
+	SFM(const Camera & cam,const size_t images_size);
 	~SFM();
 	virtual void Run(Frame::Ptr p_frame);
-	void FeatureExtract(Frame::Ptr p_frame);
-	void Match(FeaturePairs &features_pairs,IndexesPairs & match_pairs);
-	bool RecoverPose(const FeaturePairs &features_pairs);
-	bool RecoverPose(const FeaturePairs &features_pairs,const IndexesPairs & match_pairs,FeaturePairs &new_features_pairs);
-	void RecoverMapPoints(const FeaturePairs &features_pairs,const IndexesPairs & match_pairs);
-	bool Tracking();
-	bool Init();
-	void UpdateRefFrame();
-	std::vector<Eigen::Vector3d> map_points()const{
-		return map_points_;
-	}
+	void ExtractMatch(Frame::Ptr p_frame);
+	void InitStructure();
 private:
-
-	States states_;
 	size_t image_count_;
+	size_t images_size_;
 	Camera::Ptr p_camera_;
 	Feature::Ptr p_feature_;
 	Matcher::Ptr p_matcher_;
-	Frame::Ptr p_frame_ref_;
-	Frame::Ptr p_frame_cur_;
-	Frame::Ptr p_frame_pre_;
+	Pose::Ptr p_pose_;
 	Map::Ptr p_map_;
-	KeyPoints key_points_ref_;
-	KeyPoints key_points_cur_;
-	KeyPoints key_points_pre_;
-	cv::Mat descriptors_ref_;
-	cv::Mat descriptors_cur_;
-	cv::Mat descriptors_pre_;
-	// Pairs2d_3d pairs2_3_;
-	PairsIdxPoint3d pairs_idx_point3d_;
-	std::vector<Eigen::Vector3d> map_points_;
-	// std::vector<KeyPoints> all_key_points_;
-	// std::vector<cv::Mat> all_descriptors_;
+	AllKeyPoints all_key_points_;
+	std::vector<AllMatches> all_matches_;// all_matches_[i][j]: the matches between the ith frame and the jth frame
+	AllDescriptors all_descriptors_;
+	MapPoints all_map_points_; // all map points 3d
+	std::vector<std::vector<int>> correspond_idx_;// correspond_idx_[i][j]: the index of map_points_ correspondence the ith frame jth feature
+	std::vector<cv::Mat> rotations_;
+	std::vector<cv::Mat> translations_;
 };
-
 }
 
 

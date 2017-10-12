@@ -57,7 +57,7 @@ int main(int argc,char **argv){
 		}
 	}
 	VISG::Map map;
-	map.Triangulation(feature_pairs,cam,pose);
+	map.Triangulation(feature_pairs,Pose(),pose,cam);
 	const string points_file("/home/lipei/data/points.txt");
 	savePoints(points_file,map.map_points());
 

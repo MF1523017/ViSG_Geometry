@@ -21,9 +21,11 @@ Pose::Pose(){
 void Pose::Estimate(const KeyPoints &key_points1,
 	const KeyPoints &key_points2,
 	const DMatches & matches,
-	const Camera &cam){
-	std::vector<cv::Point2f> points1(matches.size());
-	std::vector<cv::Point2f> points2(matches.size());
+	const Camera &cam,
+	std::vector<cv::Point2f> &points1,
+	std::vector<cv::Point2f> &points2){
+	points1.resize(matches.size());
+	points2.resize(matches.size());
 	for(size_t i = 0; i < matches.size(); ++i){
 		points1[i] = key_points1[matches[i].queryIdx].pt;
 		points2[i] = key_points2[matches[i].trainIdx].pt;

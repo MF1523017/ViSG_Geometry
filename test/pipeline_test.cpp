@@ -74,7 +74,7 @@
 	 	auto features_pairs =  extractor.features_pairs();
 	 	pose.Estimate(features_pairs,cam);
 	 	VISG::Map map;
-	 	map.Triangulation(features_pairs,cam,pose);
+	 	map.Triangulation(features_pairs,Pose(),pose,cam);
 		// 	const string points_file("/home/lipei/data/points.txt");
 		// 	savePoints(points_file,map.map_points());
 	 	cout << "[parallax]: " << VISG::parallax(features_pairs) << endl;

@@ -44,6 +44,7 @@ add_library(map SHARED	${PROJECT_SOURCE_DIR}/src/map.cpp)
 add_library(feature_extractor SHARED	${PROJECT_SOURCE_DIR}/src/feature_extractor.cpp)
 add_library(geometry SHARED ${PROJECT_SOURCE_DIR}/src/geometry.cpp)
 add_library(sfm SHARED ${PROJECT_SOURCE_DIR}/src/sfm.cpp)
+add_library(slam SHARED ${PROJECT_SOURCE_DIR}/src/slam.cpp)
 add_library(frame SHARED ${PROJECT_SOURCE_DIR}/src/frame.cpp)
 
 
@@ -61,4 +62,5 @@ target_link_libraries(VISGSFM map)
 target_link_libraries(VISGSFM feature_extractor)
 target_link_libraries(VISGSFM geometry)
 target_link_libraries(VISGSFM sfm)
+target_link_libraries(VISGSFM slam)
 target_link_libraries(VISGSFM frame)

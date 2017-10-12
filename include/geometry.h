@@ -15,6 +15,9 @@ namespace VISG{
 class Geometry{
 public:
 	virtual void Run(Frame::Ptr p_frame) = 0;
+	virtual ~Geometry(){
+			std::cout << "[Geometry ~Geometry] GOODBYE Geometry " << std::endl;
+	}
 };
 
 
