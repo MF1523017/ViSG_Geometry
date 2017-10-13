@@ -12,12 +12,14 @@
 #include <iostream>
 #include <vector>
 
+
 namespace VISG{
 
 class Pose{
 public:
 	using Ptr = std::shared_ptr<Pose>;
 	Pose();
+	Pose(cv::Mat R,cv::Mat t):R_(R),t_(t){}
 	void Estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,
 		const DMatches &matches,

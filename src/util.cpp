@@ -39,10 +39,10 @@ void video2images(const string &video_name,const string &image_dir){
 /*
  * @brief: x = K * X ==> K' * x
  * */
-cv::Point2d pixel2cam(const cv::Point2f &p, const cv::Mat & K){
+cv::Point2f pixel2cam(const cv::Point2f &p, const cv::Mat & K){
 	return cv::Point2d(
-			(static_cast<double>(p.x) - K.at<double>(0,2)) / K.at<double>(0,0),
-			(static_cast<double>(p.y) - K.at<double>(1,2)) / K.at<double>(1,1)
+			(static_cast<float>(p.x) - K.at<float>(0,2)) / K.at<float>(0,0),
+			(static_cast<float>(p.y) - K.at<float>(1,2)) / K.at<float>(1,1)
 			);
 }
 /*

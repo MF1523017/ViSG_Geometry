@@ -6,6 +6,8 @@
  ************************************************************************/
 
 #include "pose.h"
+#include <cassert>
+
 namespace VISG{
 
 Pose::Pose(){
@@ -84,7 +86,12 @@ void Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv
 		std::cout << "correspondences error " << std::endl;
 		return;
 	}
-	cv::solvePnP(points3,points2,cam.K(),cv::Mat(),R_,t_,false,cv::SOLVEPNP_EPNP);
+	assert(points2.size() != points3.size());
+	bool ret = cv::solvePnP(points3,points2,cam.K(),cv::Mat(),R_,t_,false,cv::SOLVEPNP_EPNP);
+	if(!ret){
+		std::cout << "[Pose::Estimate] pnp error" << std::endl;
+		return;
+	}
 	cv::Mat Rvec;
 	cv::Rodrigues(R_,Rvec);
 	std::cout << "Rvec: " << std::endl << Rvec << std::endl;

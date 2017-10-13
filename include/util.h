@@ -16,7 +16,7 @@ void video2images(const std::string& video_name,const std::string &image_dir);
 
 // camera
 
-cv::Point2d pixel2cam(const cv::Point2f &p, const cv::Mat & K);
+cv::Point2f pixel2cam(const cv::Point2f &p, const cv::Mat & K);
 
 cv::Mat cvMatrix3_4(const Pose &pose);
 Eigen::Vector3d cv2eigen_Vector3d(const cv::Point3d &p);

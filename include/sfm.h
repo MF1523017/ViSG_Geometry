@@ -23,6 +23,13 @@ public:
 	virtual void Run(Frame::Ptr p_frame);
 	void ExtractMatch(Frame::Ptr p_frame);
 	void InitStructure();
+	void MultiView();
+	void GetPnP(const size_t idx,std::vector<cv::Point2f> &points2,std::vector<cv::Point3f> &points3);
+	void FusionStructure(const size_t idx);
+	MapPoints all_map_points()const{
+		return all_map_points_;
+	}
+	// void
 private:
 	size_t image_count_;
 	size_t images_size_;
