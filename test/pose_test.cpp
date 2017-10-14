@@ -38,16 +38,10 @@ int main(int argc,char **argv){
 
 	VISG::Camera cam(458.654,457.296,367.215,248.375);
 	VISG::Pose pose;
-<<<<<<< HEAD
-	pose.estimate(ff1.key_points(),ff2.key_points(),mt.matches(),cam);
-
-=======
 	pose.Estimate(key_points1,key_points2,mt.inlier_matches(),cam);
 	cout << "[pose] EigenR " << pose.EigenR() << endl;
 	cout << "[pose] Eigent " << pose.Eigent().transpose() << endl;
 	cout << "[pose] EigenPoseMatrix3_4 " << pose.EigenPoseMatrix3_4() << endl;
-	
->>>>>>> dev
 	cv::Mat img_match, img_good_match;
 	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.matches(),img_match);
 	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
