@@ -16,7 +16,7 @@ using namespace std;
 void savePoints(const string &name,std::vector<cv::Point3d> points){
  ofstream out(name);
  for(auto p: points){
-	 out << 1e6 * p.x << "," << 1e6 * p.y << "," << 1e6 * p.z << endl;
+	 out <<  p.x << "," <<  p.y << "," <<  p.z << endl;
  }
  out.close();
 }
@@ -78,7 +78,7 @@ int main(int argc,char **argv){
 	 sfm.ExtractMatch(p_frame);
  }
  sfm.InitStructure();
- sfm.MultiView();
+ // sfm.MultiView();
  savePoints(file_dir + "/pointscloud.txt",sfm.all_map_points());
  // auto map_points = SALM.map_points();
  // const string points_file("/home/lipei/data/SALM_points.txt");

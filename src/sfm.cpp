@@ -57,7 +57,8 @@ void SFM::InitStructure(){
 	}
 
 	std::vector<cv::Point2f> points1,points2;
-	p_pose_->Estimate(all_key_points_[0],all_key_points_[1],all_matches_[0][1],*p_camera_,points1,points2);
+	bool ret = p_pose_->Estimate(all_key_points_[0],all_key_points_[1],*p_camera_,all_matches_[0][1],points1,points2);
+	assert(ret);
 	rotations_[1] = p_pose_->R();
 	translations_[1] = p_pose_->t();
 	p_map_->Triangulation(points1,points2,Pose(),*p_pose_,*p_camera_);

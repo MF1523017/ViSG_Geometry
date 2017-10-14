@@ -20,10 +20,10 @@ public:
 	using Ptr = std::shared_ptr<Pose>;
 	Pose();
 	Pose(cv::Mat R,cv::Mat t):R_(R),t_(t){}
-	void Estimate(const KeyPoints &key_points1,
+	bool Estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,
-		const DMatches &matches,
 		const Camera &cam,
+		DMatches &matches,
 		std::vector<cv::Point2f> &points1,
 		std::vector<cv::Point2f> &points2);
 	void Estimate(const FeaturePairs &features_pairs,const Camera &cam);
@@ -47,10 +47,8 @@ public:
 	Eigen::Matrix<double,3,4> EigenPoseMatrix3_4()const;
 
 private:
-	cv::Mat R_;
+	cv::Mat R_;//3*3 matrix
 	cv::Mat t_;
-
-
 };
 
 
