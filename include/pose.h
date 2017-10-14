@@ -12,17 +12,24 @@
 #include <iostream>
 #include <vector>
 
+
 namespace VISG{
 
 class Pose{
 public:
-	void estimate(const KeyPoints &key_points1,
+	using Ptr = std::shared_ptr<Pose>;
+	Pose();
+	Pose(cv::Mat R,cv::Mat t):R_(R),t_(t){}
+	bool Estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,
-		const DMatches &matches,
-		const Camera &cam);
-
-	void estimate(const FeaturePairs &features_pairs,const Camera &cam);
-	void estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
+		const Camera &cam,
+		DMatches &matches,
+		std::vector<cv::Point2f> &points1,
+		std::vector<cv::Point2f> &points2);
+	void Estimate(const FeaturePairs &features_pairs,const Camera &cam);
+	void Estimate(const FeaturePairs &features_pairs,const cv::Mat &K);
+	void Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
+	void Estimate(const PnP &pnp,const Camera &cam);
 	cv::Mat R()const {
 		return R_;
 	}
@@ -34,11 +41,13 @@ public:
 	cv::Mat t()const {
 		return t_;
 	}
-
 	cv::Mat cvPoseMatrix3_4()const;
+	Eigen::Matrix3d EigenR()const;
+	Eigen::Vector3d Eigent()const;
+	Eigen::Matrix<double,3,4> EigenPoseMatrix3_4()const;
 
 private:
-	cv::Mat R_;
+	cv::Mat R_;//3*3 matrix
 	cv::Mat t_;
 };
 

@@ -18,7 +18,9 @@ class Map{
 
 
 public:
-	void triangulation(const FeaturePairs &features_pairs,const Camera &cam,const Pose &pose);
+	using Ptr = std::shared_ptr<Map>;
+	void Triangulation(const FeaturePairs &features_pairs,const Pose &pose1,const Pose &pose2,const Camera &cam);
+	void Triangulation(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const Pose &pose1,const Pose &pose2,const Camera &cam);
 
 	std::vector<cv::Point3d> map_points() const {
 		return map_points_;

@@ -9,7 +9,7 @@
 
 namespace VISG{
 
-FeatureResult  FeatureExtractor::extract_match(cv::Mat &img1,cv::Mat &img2){
+FeatureResult  FeatureExtractor::ExtractMatch(cv::Mat &img1,cv::Mat &img2){
 	KeyPoints key_points1,key_points2;
 	cv::Mat descriptors1,descriptors2;
 	DMatches matches;

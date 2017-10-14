@@ -25,7 +25,7 @@ struct FeatureResult{
 class FeatureExtractor{
 public:
 	FeatureExtractor() = default;
-	FeatureResult extract_match(cv::Mat &img1,cv::Mat &img2);
+	FeatureResult ExtractMatch(cv::Mat &img1,cv::Mat &img2);
 	FeaturePairs features_pairs()const{
 		return features_pairs_;
 	}

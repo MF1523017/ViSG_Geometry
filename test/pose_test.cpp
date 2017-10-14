@@ -23,20 +23,31 @@ int main(int argc,char **argv){
 	cout << "feature extraction " << endl;
 
 	VISG::Feature ff1;
-	ff1.extract(img1);
-	VISG::Feature ff2;
-	ff2.extract(img2);
+	ff1.Extract(img1);
+	auto descriptors1 = ff1.descriptors();
+	auto key_points1 = ff1.key_points();
+	ff1.Extract(img2);
+	auto descriptors2 = ff1.descriptors();
+	auto key_points2 = ff1.key_points();
 
 	cout << "feature match " << endl;
 	VISG::Matcher mt;
-	mt.match(ff1.descriptors(),ff2.descriptors());
+	mt.Match(descriptors1,descriptors2);
 
 	cout << "draw result " << endl;
 
 	VISG::Camera cam(458.654,457.296,367.215,248.375);
 	VISG::Pose pose;
+<<<<<<< HEAD
 	pose.estimate(ff1.key_points(),ff2.key_points(),mt.matches(),cam);
 
+=======
+	pose.Estimate(key_points1,key_points2,mt.inlier_matches(),cam);
+	cout << "[pose] EigenR " << pose.EigenR() << endl;
+	cout << "[pose] Eigent " << pose.Eigent().transpose() << endl;
+	cout << "[pose] EigenPoseMatrix3_4 " << pose.EigenPoseMatrix3_4() << endl;
+	
+>>>>>>> dev
 	cv::Mat img_match, img_good_match;
 	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.matches(),img_match);
 	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
