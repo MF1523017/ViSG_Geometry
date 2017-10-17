@@ -11,11 +11,8 @@
 namespace VISG{
 
 Pose::Pose(){
-	R_ = (cv::Mat_<double>(3,3) <<
-				1,0,0,
-				0,1,0,
-				0,0,1);
-	t_ = (cv::Mat_<double>(3,1) << 0,0,0);
+	R_ = cv::Mat::eye(3,3,CV_64FC1);
+	t_ = cv::Mat::zeros(3,1,CV_64FC1);
 }
 /*
 	@brief:estimate pose from two frame features using recoverPose
