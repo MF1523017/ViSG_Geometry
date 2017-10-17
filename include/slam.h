@@ -30,7 +30,7 @@ public:
 	virtual void Run(Frame::Ptr p_frame);
 	void FeatureExtract(Frame::Ptr p_frame);
 	void Match(FeaturePairs &features_pairs,IndexesPairs & match_pairs);
-	bool RecoverPose(const FeaturePairs &features_pairs);
+	bool RecoverPose(FeaturePairs &features_pairs);
 	bool RecoverPose(const FeaturePairs &features_pairs,const IndexesPairs & match_pairs,FeaturePairs &new_features_pairs);
 	void RecoverMapPoints(const FeaturePairs &features_pairs,const IndexesPairs & match_pairs);
 	bool Tracking();

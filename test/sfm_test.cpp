@@ -78,7 +78,7 @@ int main(int argc,char **argv){
 	 sfm.ExtractMatch(p_frame);
  }
  sfm.InitStructure();
- // sfm.MultiView();
+ sfm.MultiView();
  savePoints(file_dir + "/pointscloud.txt",sfm.all_map_points());
  // auto map_points = SALM.map_points();
  // const string points_file("/home/lipei/data/SALM_points.txt");

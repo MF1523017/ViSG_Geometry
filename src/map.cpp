@@ -61,7 +61,7 @@ void Map::Triangulation(const std::vector<cv::Point2f> &points1,const std::vecto
 	pose2.cvPoseMatrix3_4().convertTo(T2,CV_32FC1);
 	cv::Mat K;
 	cam.K().convertTo(K,CV_32FC1);
-	std::cout << "[Map::Triangulation]: T1 " << std::endl << T1 << std::endl << "T2: " << std::endl << T2 << std::endl << "K: " << std::endl << K << std::endl;
+	// std::cout << "[Map::Triangulation]: T1 " << std::endl << T1 << std::endl << "T2: " << std::endl << T2 << std::endl << "K: " << std::endl << K << std::endl;
 	size_t matches_size = points1.size();
 	std::vector<cv::Point2f> points1_cam(matches_size);
 	std::vector<cv::Point2f> points2_cam(matches_size);

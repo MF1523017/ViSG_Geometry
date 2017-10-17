@@ -39,7 +39,7 @@ bool SLAM::Init(){
 /*
 * @brief: recover pose from pairs 2d <==> 2d;
 */
-bool SLAM::RecoverPose(const FeaturePairs &features_pairs){
+bool SLAM::RecoverPose(FeaturePairs &features_pairs){
 	if(features_pairs.size() < 8){
 		std::cout << "[recover_pose_2d_2d] features_pairs too little " << std::endl;
 		return false;

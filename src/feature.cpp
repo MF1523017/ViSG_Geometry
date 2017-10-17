@@ -29,10 +29,9 @@
  #ifdef TEST
  	cv::Mat img_key_points;
  	cv::drawKeypoints(img,key_points_,img_key_points,cv::Scalar::all(-1),cv::DrawMatchesFlags::DEFAULT);
-
- 	cv::namedWindow("keyPoints",cv::WINDOW_AUTOSIZE);
+ 	cv::namedWindow("keyPoints",0);
  	cv::imshow("keyPoints",img_key_points);
- 	cv::waitKey(0);
+ 	cv::waitKey(2000);
  	cv::destroyAllWindows();
  #endif
  }
