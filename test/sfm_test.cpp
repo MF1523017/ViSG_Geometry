@@ -13,7 +13,7 @@ using namespace std;
 
 // #define SKIP_FRAMES 10
 
-void savePoints(const string &name,std::vector<cv::Point3d> points){
+void savePoints(const string &name,std::vector<cv::Point3f> points){
  ofstream out(name);
  for(auto p: points){
 	 out <<  p.x << "," <<  p.y << "," <<  p.z << endl;
@@ -30,7 +30,7 @@ void savePoints(const string &name,std::vector<Eigen::Vector3d> points){
 }
 
 vector<string> loadImage(const string & file_dir){
-  const string data_file(file_dir + "/data.csv");
+  const string data_file(file_dir + "/data_short.csv");
   ifstream read_images(data_file);
   string line;
   vector<string> images;

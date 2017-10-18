@@ -9,6 +9,26 @@
 
 namespace VISG{
 	/*
+	* @brief triangulation: all inputs should be float type(base)
+	*/
+void Map::Triangulation(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const cv::Mat &T1,const cv::Mat &T2){
+	cv::Mat points_4d;
+	// cv::Mat points_4d(1,points1.size(),CV_64FC4);
+	cv::triangulatePoints(T1,T2,points1,points2,points_4d);
+	map_points_.clear();// clear old map points;
+	// cv::Mat points_4d;
+	// points_4d1.convertTo(points_4d,CV_64FC1);
+
+	for(size_t i = 0; i < points_4d.cols; ++i){
+		cv::Mat x = points_4d.col(i);
+		if(fabs(x.at<float>(3.0)) < 1e-9)
+			x.at<float>(3.0) = 1e-9;
+		x /= x.at<float>(3,0);
+		// std::cout << "[Map::Triangulation] x: " << x << std::endl;
+		map_points_.push_back(cv::Point3f(x.at<float>(0,0),x.at<float>(1,0),x.at<float>(2,0)));
+	}
+}
+	/*
 	* @brief triangulation: all inputs should be float type
 	*/
 void Map::Triangulation(const FeaturePairs &features_pairs,const Pose &pose1,const Pose &pose2,const Camera &cam){
@@ -34,20 +54,7 @@ void Map::Triangulation(const FeaturePairs &features_pairs,const Pose &pose1,con
 		points1[i] = pixel2cam(features_pairs[i].first.pt,K);
 		points2[i] = pixel2cam(features_pairs[i].second.pt,K);
 	}
-
-	cv::Mat points_4d1;
-	cv::triangulatePoints(T1,T2,points1,points2,points_4d1);
-	map_points_.clear();// clear old map points;
-	cv::Mat points_4d;
-	points_4d1.convertTo(points_4d,CV_64FC1);
-	for(size_t i = 0; i < points_4d.cols; ++i){
-		cv::Mat x = points_4d.col(i);
-	//	std::cout << "[triangulation] x:" << x << std::endl;
-		if(fabs(x.at<double>(3.0)) < 1e-9)
-			x.at<double>(3.0) = 1e-9;
-		x /= x.at<double>(3,0);
-		map_points_.push_back(cv::Point3d(x.at<double>(0,0),x.at<double>(1,0),x.at<double>(2,0)));
-	}
+	Triangulation(points1,points2,T1,T2);
 }
 
 /*
@@ -69,19 +76,7 @@ void Map::Triangulation(const std::vector<cv::Point2f> &points1,const std::vecto
 		points1_cam[i] = pixel2cam(points1[i],K);
 		points2_cam[i] = pixel2cam(points2[i],K);
 	}
-	cv::Mat points_4d1;
-	cv::triangulatePoints(T1,T2,points1_cam,points2_cam,points_4d1);
-	cv::Mat points_4d;
-	points_4d1.convertTo(points_4d,CV_64FC1);
-	map_points_.clear();// clear old map points;
-	for(size_t i = 0; i < points_4d.cols; ++i){
-		cv::Mat x = points_4d.col(i);
-	//	std::cout << "[triangulation] x:" << x << std::endl;
-		if(fabs(x.at<double>(3.0)) < 1e-9)
-			x.at<double>(3.0) = 1e-9;
-		x /= x.at<double>(3,0);
-		map_points_.push_back(cv::Point3d(x.at<double>(0,0),x.at<double>(1,0),x.at<double>(2,0)));
-	}
+	Triangulation(points1_cam,points2_cam,T1,T2);
 }
 
 }

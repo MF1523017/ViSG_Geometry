@@ -19,7 +19,10 @@ class Pose{
 public:
 	using Ptr = std::shared_ptr<Pose>;
 	Pose();
-	Pose(cv::Mat R,cv::Mat t):R_(R),t_(t){}
+	Pose(const cv::Mat &R,const cv::Mat &t){
+		R.copyTo(R_);
+		t.copyTo(t_);
+	}
 	bool Estimate(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const Camera &cam,cv::Mat &inliers);
 	bool Estimate(const KeyPoints &key_points1,
 		const KeyPoints &key_points2,

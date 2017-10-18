@@ -27,12 +27,15 @@ int main(int argc,char **argv){
 	cout << "feature match " << endl;
 	VISG::Matcher mt;
 	mt.Match(descriptors1,descriptors2);
-	
+	auto matches = mt.inlier_matches();
+	for(size_t i = 0; i < matches.size(); ++i){
+		cout << "[matcher test]: " << key_points1[matches[i].queryIdx].pt << " <==> " << key_points2[matches[i].trainIdx].pt << endl;
+	}
 	cv::Mat img_match, img_good_match;
-	cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.matches(),img_match);
-	// cv::drawMatches(img1,ff1.key_points(),img2,ff2.key_points(),mt.inlier_matches(),img_good_match);
+	cv::drawMatches(img1,key_points1,img2,key_points2,mt.matches(),img_match);
+	cv::drawMatches(img1,key_points1,img2,key_points2,mt.inlier_matches(),img_good_match);
 	cv::imshow("feature match" ,img_match);
-	// cv::imshow("inlier feature match" ,img_good_match);
+	cv::imshow("inlier feature match" ,img_good_match);
 	cv::waitKey(0);
 	return 0;
 }

@@ -115,8 +115,8 @@ void Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv
 		std::cout << "[Pose::Estimate] pnp error" << std::endl;
 		return;
 	}
-#ifdef TEST
 	cv::Rodrigues(Rvec,R_);
+#ifdef TEST
 	// std::cout << "[Pose::Estimate] Rvec: " << std::endl << Rvec << std::endl;
 	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << R_ << std::endl;
 	std::cout << "[Pose::Estimate] t: " << std::endl << t_ << std::endl;

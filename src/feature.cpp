@@ -31,7 +31,7 @@
  	cv::drawKeypoints(img,key_points_,img_key_points,cv::Scalar::all(-1),cv::DrawMatchesFlags::DEFAULT);
  	cv::namedWindow("keyPoints",0);
  	cv::imshow("keyPoints",img_key_points);
- 	cv::waitKey(2000);
+ 	while(cv::waitKey()==27);
  	cv::destroyAllWindows();
  #endif
  }

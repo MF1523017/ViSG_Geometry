@@ -17,13 +17,8 @@ p_feature_(new Feature),p_matcher_(new Matcher),p_pose_(new Pose),p_map_(new Map
 	std::cout << "[SFM] all_matches_ size: " << all_matches_.size() << " all_matches_[0] size: " << all_matches_[0].size() << std::endl;
 	rotations_.resize(images_size_);
 	translations_.resize(images_size_);
-	cv::Mat R0 = (cv::Mat_<double>(3,3) <<
-				1,0,0,
-				0,1,0,
-				0,0,1);
-	cv::Mat t0 = (cv::Mat_<double>(3,1) << 0,0,0);
-	rotations_[0] = R0;
-	translations_[0] = t0;
+	rotations_[0] = cv::Mat::eye(3,3,CV_64FC1);
+	translations_[0] = cv::Mat::zeros(3,1,CV_64FC1);
 }
 SFM::~SFM(){
 	std::cout << "[SFM ~SFM] GOODBYE SFM " << std::endl;
@@ -59,8 +54,8 @@ void SFM::InitStructure(){
 	std::vector<cv::Point2f> points1,points2;
 	bool ret = p_pose_->Estimate(all_key_points_[0],all_key_points_[1],*p_camera_,all_matches_[0][1],points1,points2);
 	assert(ret);
-	rotations_[1] = p_pose_->R();
-	translations_[1] = p_pose_->t();
+	p_pose_->R().copyTo(rotations_[1]);
+	p_pose_->t().copyTo(translations_[1]);
 	p_map_->Triangulation(points1,points2,Pose(),*p_pose_,*p_camera_);
 	auto map_points = p_map_->map_points();
 	auto matches = all_matches_[0][1];
@@ -83,9 +78,9 @@ void SFM::GetPnP(const size_t idx,std::vector<cv::Point2f> &points2,std::vector<
 			continue;
 		}
 		for(size_t j = 0; j < matches.size(); ++j){
-			size_t query_idx = matches[j].queryIdx;
-			size_t train_idx = matches[j].trainIdx;
-			size_t map_points_idx = correspond_idx_[i][query_idx];
+			auto query_idx = matches[j].queryIdx;
+			auto train_idx = matches[j].trainIdx;
+			auto map_points_idx = correspond_idx_[i][query_idx];
 			if(map_points_idx == -1)
 				continue;
 			points2.push_back(all_key_points_[idx][train_idx].pt);
@@ -98,28 +93,38 @@ void SFM::GetPnP(const size_t idx,std::vector<cv::Point2f> &points2,std::vector<
 * @brief: fusion the new correspondences to structure
 */
 void SFM::FusionStructure(const size_t idx){
+	std::vector<cv::Point2f> points1,points2;
 	for(size_t i = 0; i < idx; ++i){
 		auto matches = all_matches_[i][idx];
 		if(matches.size() < 8)
 			continue;
-		std::vector<cv::Point2f> points1,points2;
+		points1.clear();
+		points2.clear();
 		for(size_t j = 0; j < matches.size(); ++j){
-			size_t query_idx = matches[j].queryIdx;
-			size_t train_idx = matches[j].trainIdx;
-			size_t map_points_idx = correspond_idx_[i][query_idx];
+			auto query_idx = matches[j].queryIdx;
+			auto train_idx = matches[j].trainIdx;
+			auto map_points_idx = correspond_idx_[i][query_idx];
 			if(map_points_idx == -1){
 				points1.push_back(all_key_points_[i][query_idx].pt);
 				points2.push_back(all_key_points_[idx][train_idx].pt);
+				correspond_idx_[i][query_idx] = 0;
+				// std::cout << "[FusionStructure]  query_idx: " << query_idx << " points1: " << points1.back() << std::endl;
+				// std::cout << "[FusionStructure]  train_idx: " << train_idx << std::endl;
+ 			// 	std::cout << "[FusionStructure] points1: " << points1.back() << " all_key_points_:pt " << all_key_points_[i][query_idx].pt << std::endl;
+				// std::cout << "[FusionStructure] points2: " << points2.back() << " all_key_points_:pt " << all_key_points_[idx][train_idx].pt << std::endl;
 			}
 		}
-		std::cout << "[FusionStructure] correspondences ize: " << points1.size() << std::endl;
-		p_map_->Triangulation(points1,points2,Pose(rotations_[i],translations_[i]),
-													Pose(rotations_[idx],translations_[idx]),*p_camera_);
+		// std::cout << "[FusionStructure] correspondences ize: " << points1.size() << std::endl;
+		Pose pose1(rotations_[i],translations_[i]);
+		Pose pose2(rotations_[idx],translations_[idx]);
+		p_map_->Triangulation(points1,points2,pose1,pose2,*p_camera_);
 		size_t map_points_size = all_map_points_.size();
 		auto new_map_points = p_map_->map_points();
-		std::cout << "[FusionStructure] new map points size: " << new_map_points.size() << std::endl;
+		// std::cout << "[FusionStructure] new map points size: " << new_map_points.size() << " i: " << i << " <==> idx: " << idx << std::endl;
 		for(size_t k = 0; k < new_map_points.size(); ++k){
-			all_map_points_.push_back(new_map_points[i]);
+			// std::cout << "[FusionStructure] points1: " << points1[k] << " points2: " << points2[k] << std::endl;
+			// std::cout << "[FusionStructure] new map points: " << new_map_points[k] << std::endl;
+			all_map_points_.push_back(new_map_points[k]);
 			correspond_idx_[i][matches[k].queryIdx] = map_points_size + k;
 			correspond_idx_[idx][matches[k].trainIdx] = map_points_size + k;
 		}
@@ -129,6 +134,7 @@ void SFM::FusionStructure(const size_t idx){
 * @brief: MultiView: structure from motion
 */
 void SFM::MultiView(){
+#ifdef TEST
 	std::cout << "[MultiView] all_matches_: " << std::endl;
 	for(size_t i = 0; i < all_matches_.size(); ++i){
 		for(size_t j = 0; j < all_matches_[0].size(); ++j){
@@ -136,15 +142,19 @@ void SFM::MultiView(){
 		}
 		std::cout << std::endl;
 	}
+#endif
+
+	std::vector<cv::Point2f> points2;
+	std::vector<cv::Point3f> points3;
 	for(size_t i = 2; i < all_matches_.size(); ++i){
-		std::vector<cv::Point2f> points2;
-		std::vector<cv::Point3f> points3;
+		points2.clear();
+		points3.clear();
 		GetPnP(i,points2,points3);
 		assert(points2.size() != points3.size());
 		std::cout << "[MultiView] pnp size: " << points3.size() << std::endl;
 		p_pose_->Estimate(points2,points3,*p_camera_);
-		rotations_[i] = p_pose_->R();
-		translations_[i] = p_pose_->t();
+		p_pose_->R().copyTo(rotations_[i]);
+		p_pose_->t().copyTo(translations_[i]);
 		FusionStructure(i);
 	}
 }
