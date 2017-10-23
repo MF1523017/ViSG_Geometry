@@ -21,8 +21,8 @@ void Map::Triangulation(const std::vector<cv::Point2f> &points1,const std::vecto
 
 	for(size_t i = 0; i < points_4d.cols; ++i){
 		cv::Mat x = points_4d.col(i);
-		if(fabs(x.at<float>(3.0)) < 1e-9)
-			x.at<float>(3.0) = 1e-9;
+		if(fabs(x.at<float>(3.0)) < 1e-5)
+			x.at<float>(3.0) = 1e-5;
 		x /= x.at<float>(3,0);
 		// std::cout << "[Map::Triangulation] x: " << x << std::endl;
 		map_points_.push_back(cv::Point3f(x.at<float>(0,0),x.at<float>(1,0),x.at<float>(2,0)));

@@ -31,8 +31,8 @@ public:
 		std::vector<cv::Point2f> &points1,
 		std::vector<cv::Point2f> &points2);
 	bool Estimate(FeaturePairs &features_pairs,const Camera &cam);
-	void Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
-	void Estimate(const PnP &pnp,const Camera &cam);
+	bool Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
+	bool Estimate(const PnP &pnp,const Camera &cam);
 	cv::Mat R()const {
 		return R_;
 	}

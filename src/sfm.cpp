@@ -107,17 +107,12 @@ void SFM::FusionStructure(const size_t idx){
 			if(map_points_idx == -1){
 				points1.push_back(all_key_points_[i][query_idx].pt);
 				points2.push_back(all_key_points_[idx][train_idx].pt);
-				correspond_idx_[i][query_idx] = 0;
-				// std::cout << "[FusionStructure]  query_idx: " << query_idx << " points1: " << points1.back() << std::endl;
-				// std::cout << "[FusionStructure]  train_idx: " << train_idx << std::endl;
- 			// 	std::cout << "[FusionStructure] points1: " << points1.back() << " all_key_points_:pt " << all_key_points_[i][query_idx].pt << std::endl;
-				// std::cout << "[FusionStructure] points2: " << points2.back() << " all_key_points_:pt " << all_key_points_[idx][train_idx].pt << std::endl;
+			}else{
+				correspond_idx_[idx][train_idx] = map_points_idx;
 			}
 		}
 		// std::cout << "[FusionStructure] correspondences ize: " << points1.size() << std::endl;
-		Pose pose1(rotations_[i],translations_[i]);
-		Pose pose2(rotations_[idx],translations_[idx]);
-		p_map_->Triangulation(points1,points2,pose1,pose2,*p_camera_);
+		p_map_->Triangulation(points1,points2,Pose(rotations_[i],translations_[i]),Pose(rotations_[idx],translations_[idx]),*p_camera_);
 		size_t map_points_size = all_map_points_.size();
 		auto new_map_points = p_map_->map_points();
 		// std::cout << "[FusionStructure] new map points size: " << new_map_points.size() << " i: " << i << " <==> idx: " << idx << std::endl;
@@ -150,12 +145,14 @@ void SFM::MultiView(){
 		points2.clear();
 		points3.clear();
 		GetPnP(i,points2,points3);
-		assert(points2.size() != points3.size());
 		std::cout << "[MultiView] pnp size: " << points3.size() << std::endl;
-		p_pose_->Estimate(points2,points3,*p_camera_);
+		bool ret = p_pose_->Estimate(points2,points3,*p_camera_);
+		assert(ret);
 		p_pose_->R().copyTo(rotations_[i]);
 		p_pose_->t().copyTo(translations_[i]);
-		FusionStructure(i);
+		std::cout << "[MultiView] ith: " << i << "  R: " << rotations_[i] << std::endl
+							<< " t: " << translations_[i] << std::endl;
+ 		FusionStructure(i);
 	}
 }
 

@@ -22,7 +22,7 @@
 #include <cmath>
 
 
-#define TEST
+// #define TEST
 // #define USE_ORB
 #define USE_SIFT
 

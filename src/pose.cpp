@@ -103,17 +103,17 @@ return true;
 	@brief:estimate pose from correspondences(point2 <==> point3) using solvePnP
 */
 
-void Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam){
+bool Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam){
 	if(points2.size() != points3.size()){
 		std::cout << "[Pose::Estimate] correspondences error " << std::endl;
-		return;
+		return false;
 	}
-	assert(points2.size() != points3.size());
-	cv::Mat Rvec;
-	bool ret = cv::solvePnP(points3,points2,cam.K(),cv::Mat(),Rvec,t_,false,cv::SOLVEPNP_EPNP);
+	cv::Mat Rvec = cv::Mat::zeros(3,1,CV_32FC1);;
+	// bool ret = cv::solvePnP(points3,points2,cam.K(),cv::Mat(),Rvec,t_,false,cv::SOLVEPNP_ITERATIVE);
+	bool ret = cv::solvePnPRansac(points3,points2,cam.K(),cv::noArray(),Rvec,t_);
 	if(!ret){
 		std::cout << "[Pose::Estimate] pnp error" << std::endl;
-		return;
+		return false;
 	}
 	cv::Rodrigues(Rvec,R_);
 #ifdef TEST
@@ -121,16 +121,17 @@ void Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv
 	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << R_ << std::endl;
 	std::cout << "[Pose::Estimate] t: " << std::endl << t_ << std::endl;
 #endif
+	return true;
 }
 
-void Pose::Estimate(const PnP &pnp,const Camera &cam){
+bool Pose::Estimate(const PnP &pnp,const Camera &cam){
 	std::vector<cv::Point2f> points2(pnp.size());
 	std::vector<cv::Point3f> points3(pnp.size());
 	for(size_t i = 0; i < pnp.size(); ++i){
 		points2[i] = pnp[i].first;
 		points3[i] = pnp[i].second;
 	}
-	Estimate(points2,points3,cam);
+	return Estimate(points2,points3,cam);
 }
 
 /*
@@ -141,6 +142,10 @@ cv::Mat Pose::cvPoseMatrix3_4() const{
 			R_.at<double>(0,0),R_.at<double>(0,1),R_.at<double>(0,2),t_.at<double>(0,0),
 			R_.at<double>(1,0),R_.at<double>(1,1),R_.at<double>(1,2),t_.at<double>(1,0),
 			R_.at<double>(2,0),R_.at<double>(2,1),R_.at<double>(2,2),t_.at<double>(2,0));
+	// return (cv::Mat_<float>(3,4) <<
+	// 		R_.at<float>(0,0),R_.at<float>(0,1),R_.at<float>(0,2),t_.at<float>(0,0),
+	// 		R_.at<float>(1,0),R_.at<float>(1,1),R_.at<float>(1,2),t_.at<float>(1,0),
+	// 		R_.at<float>(2,0),R_.at<float>(2,1),R_.at<float>(2,2),t_.at<float>(2,0));
 }
 /*
 	@brief convert to eigen

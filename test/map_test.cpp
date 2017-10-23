@@ -8,7 +8,7 @@
 #include <fstream>
 using namespace std;
 
-void savePoints(const string &name,std::vector<cv::Point3d> points){
+void savePoints(const string &name,std::vector<cv::Point3f> points){
 	ofstream out(name);
 	for(auto p: points){
 		out << p.x << "," << p.y << "," << p.z << endl;

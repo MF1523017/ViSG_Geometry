@@ -30,7 +30,7 @@ void savePoints(const string &name,std::vector<Eigen::Vector3d> points){
 }
 
 vector<string> loadImage(const string & file_dir){
-  const string data_file(file_dir + "/data_short.csv");
+  const string data_file(file_dir + "/data.csv");
   ifstream read_images(data_file);
   string line;
   vector<string> images;
