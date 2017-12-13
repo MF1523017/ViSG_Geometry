@@ -22,18 +22,18 @@ public:
 	void set_id(const size_t id){
 		id_ = id;
 	}
-	cv::Mat img()const{
-		return img_;
-	}
+
 	const Pose::Ptr p_pose()const{
 		return p_pose_;
 	}
 	const size_t id()const{
 		return id_;
 	}
+public:
+	cv::Mat img;
 private:
 	Pose::Ptr p_pose_;
-	cv::Mat img_;
+
 	size_t id_;
 	double time_stamp_;
 };

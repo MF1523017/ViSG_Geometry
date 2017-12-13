@@ -11,23 +11,30 @@
 namespace VISG{
 
 Pose::Pose(){
-	R_ = cv::Mat::eye(3,3,CV_64FC1);
-	t_ = cv::Mat::zeros(3,1,CV_64FC1);
+	cRw = cv::Mat::eye(3,3,CV_32F);
+	ctw = cv::Mat::zeros(3,1,CV_32F);
 }
 /*
 	@brief:estimate pose from two frame features using recoverPose(base)
 */
 bool Pose::Estimate(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const Camera &cam,cv::Mat &inliers){
-	int focal_length = static_cast<int>(cam.K().at<double>(0,0) +
-			cam.K().at<double>(1,1)) / 2;
-	cv::Point2d principal_point(cam.K().at<double>(0,2),cam.K().at<double>(1,2));
-	cv::Mat E = cv::findEssentialMat(points1,points2,focal_length,principal_point,cv::RANSAC,0.999,1.0,inliers);
-	if(E.empty())
+
+	cv::Mat E = cv::findEssentialMat(points1,points2,cam.K,cv::RANSAC,0.999,1.0,inliers);
+	if(E.empty()){
+		std::cout << "[Pose::Estimate]E empty error!" << std::endl;
 		return false;
+	}
+	std::cout << "[Pose::Estimate]3" << std::endl;
 	int valid_count = cv::countNonZero(inliers);
-	if(valid_count < 10 || static_cast<double>(valid_count) / points1.size() < 0.6)
+	if(valid_count < 10 || static_cast<double>(valid_count) / points1.size() < 0.6){
+		std::cout << "[Pose::Estimate]valid_count error!" << valid_count<< std::endl;
 		return false;
-	cv::recoverPose(E,points1,points2,R_,t_,focal_length,principal_point,inliers);
+	}
+	std::cout << "[Pose::Estimate]4" << std::endl;
+	cv::Mat mask = inliers.clone();
+	std::cout << "[Pose::Estimate]5" << std::endl;
+	cv::recoverPose(E,points1,points2,cam.K,cRw,ctw,mask);
+	std::cout << "[Pose::Estimate]6" << std::endl;
 	return true;
 }
 
@@ -40,6 +47,7 @@ bool Pose::Estimate(const KeyPoints &key_points1,
 	DMatches & matches,
 	std::vector<cv::Point2f> &points1,
 	std::vector<cv::Point2f> &points2){
+
 	std::vector<cv::Point2f> points11(matches.size());
 	std::vector<cv::Point2f> points22(matches.size());
 	for(size_t i = 0; i < matches.size(); ++i){
@@ -47,7 +55,9 @@ bool Pose::Estimate(const KeyPoints &key_points1,
 		points22[i] = key_points2[matches[i].trainIdx].pt;
 	}
 	cv::Mat inliers;
+	std::cout << "[Pose::Estimate]0!" << std::endl;
 	bool ret = Estimate(points11,points22,cam,inliers);
+		std::cout << "[Pose::Estimate]1!" << std::endl;
 	if(!ret)
 		return false;
 	auto matches_tmp = matches;
@@ -61,10 +71,10 @@ bool Pose::Estimate(const KeyPoints &key_points1,
 	}
 #ifdef TEST
 	cv::Mat Rvec;
-	cv::Rodrigues(R_,Rvec);
+	cv::Rodrigues(cRw,Rvec);
 	// std::cout << "[Pose::Estimate] Rvec: " << std::endl << Rvec << std::endl;
-	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << R_ << std::endl;
-	std::cout << "[Pose::Estimate] t: " << std::endl << t_ << std::endl;
+	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << cRw << std::endl;
+	std::cout << "[Pose::Estimate] t: " << std::endl << ctw << std::endl;
 #endif
 	return true;
 }
@@ -91,10 +101,10 @@ bool Pose::Estimate(FeaturePairs &features_pairs,const Camera &cam){
 	}
 #ifdef TEST
 	cv::Mat Rvec;
-	cv::Rodrigues(R_,Rvec);
+	cv::Rodrigues(cRw,Rvec);
 	// std::cout << "[Pose::Estimate] Rvec: " << std::endl << Rvec << std::endl;
-	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << R_ << std::endl;
-	std::cout << "[Pose::Estimate] t: " << std::endl << t_ << std::endl;
+	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << cRw << std::endl;
+	std::cout << "[Pose::Estimate] t: " << std::endl << ctw << std::endl;
 #endif
 return true;
 }
@@ -108,18 +118,18 @@ bool Pose::Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv
 		std::cout << "[Pose::Estimate] correspondences error " << std::endl;
 		return false;
 	}
-	cv::Mat Rvec = cv::Mat::zeros(3,1,CV_32FC1);;
+	cv::Mat Rvec(3,1,CV_32F);
 	// bool ret = cv::solvePnP(points3,points2,cam.K(),cv::Mat(),Rvec,t_,false,cv::SOLVEPNP_ITERATIVE);
-	bool ret = cv::solvePnPRansac(points3,points2,cam.K(),cv::noArray(),Rvec,t_);
+	bool ret = cv::solvePnPRansac(points3,points2,cam.K,cv::noArray(),Rvec,ctw);
 	if(!ret){
 		std::cout << "[Pose::Estimate] pnp error" << std::endl;
 		return false;
 	}
-	cv::Rodrigues(Rvec,R_);
+	cv::Rodrigues(Rvec,cRw);
 #ifdef TEST
 	// std::cout << "[Pose::Estimate] Rvec: " << std::endl << Rvec << std::endl;
-	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << R_ << std::endl;
-	std::cout << "[Pose::Estimate] t: " << std::endl << t_ << std::endl;
+	std::cout << "[Pose::Estimate] R[3*3]: " << std::endl << cRw << std::endl;
+	std::cout << "[Pose::Estimate] t: " << std::endl << ctw << std::endl;
 #endif
 	return true;
 }
@@ -138,10 +148,13 @@ bool Pose::Estimate(const PnP &pnp,const Camera &cam){
 	@brief T = [R|t]
 */
 cv::Mat Pose::cvPoseMatrix3_4() const{
-	return (cv::Mat_<double>(3,4) <<
-			R_.at<double>(0,0),R_.at<double>(0,1),R_.at<double>(0,2),t_.at<double>(0,0),
-			R_.at<double>(1,0),R_.at<double>(1,1),R_.at<double>(1,2),t_.at<double>(1,0),
-			R_.at<double>(2,0),R_.at<double>(2,1),R_.at<double>(2,2),t_.at<double>(2,0));
+	cv::Mat R_,t_;
+	cRw.convertTo(R_,CV_32F);
+	ctw.convertTo(t_,CV_32F);
+	return (cv::Mat_<float>(3,4) <<
+			R_.at<float>(0,0),R_.at<float>(0,1),R_.at<float>(0,2),t_.at<float>(0,0),
+			R_.at<float>(1,0),R_.at<float>(1,1),R_.at<float>(1,2),t_.at<float>(1,0),
+			R_.at<float>(2,0),R_.at<float>(2,1),R_.at<float>(2,2),t_.at<float>(2,0));
 	// return (cv::Mat_<float>(3,4) <<
 	// 		R_.at<float>(0,0),R_.at<float>(0,1),R_.at<float>(0,2),t_.at<float>(0,0),
 	// 		R_.at<float>(1,0),R_.at<float>(1,1),R_.at<float>(1,2),t_.at<float>(1,0),
@@ -152,30 +165,37 @@ cv::Mat Pose::cvPoseMatrix3_4() const{
 	R
 */
 
-Eigen::Matrix3d Pose::EigenR() const{
-	Eigen::Matrix3d R;
-	R << R_.at<double>(0,0),R_.at<double>(0,1),R_.at<double>(0,2),
-	R_.at<double>(1,0),R_.at<double>(1,1),R_.at<double>(1,2),
-	R_.at<double>(2,0),R_.at<double>(2,1),R_.at<double>(2,2);
+Eigen::Matrix3f Pose::EigenR() const{
+	Eigen::Matrix3f R;
+	cv::Mat R_;
+	cRw.convertTo(R_,CV_32F);
+	R << R_.at<float>(0,0),R_.at<float>(0,1),R_.at<float>(0,2),
+	R_.at<float>(1,0),R_.at<float>(1,1),R_.at<float>(1,2),
+	R_.at<float>(2,0),R_.at<float>(2,1),R_.at<float>(2,2);
 	return R;
 }
 /*
 	@brief convert to eigen
 	t
 */
-Eigen::Vector3d Pose::Eigent() const{
-	return Eigen::Vector3d(t_.at<double>(0,0),t_.at<double>(1,0),t_.at<double>(2,0));
+Eigen::Vector3f Pose::Eigent() const{
+	cv::Mat t_;
+	ctw.convertTo(t_,CV_32F);
+	return Eigen::Vector3f(t_.at<float>(0,0),t_.at<float>(1,0),t_.at<float>(2,0));
 }
 /*
 	@brief convert to eigen
 	Matrix3_4d
 */
-Eigen::Matrix<double,3,4> Pose::EigenPoseMatrix3_4() const{
-	Eigen::Matrix<double,3,4> matrix3_4d;
+Eigen::Matrix<float,3,4> Pose::EigenPoseMatrix3_4() const{
+	cv::Mat R_,t_;
+	cRw.convertTo(R_,CV_32F);
+	ctw.convertTo(t_,CV_32F);
+	Eigen::Matrix<float,3,4> matrix3_4d;
 	matrix3_4d <<
-	R_.at<double>(0,0),R_.at<double>(0,1),R_.at<double>(0,2),t_.at<double>(0,0),
-	R_.at<double>(1,0),R_.at<double>(1,1),R_.at<double>(1,2),t_.at<double>(1,0),
-	R_.at<double>(2,0),R_.at<double>(2,1),R_.at<double>(2,2),t_.at<double>(2,0);
+	R_.at<float>(0,0),R_.at<float>(0,1),R_.at<float>(0,2),t_.at<float>(0,0),
+	R_.at<float>(1,0),R_.at<float>(1,1),R_.at<float>(1,2),t_.at<float>(1,0),
+	R_.at<float>(2,0),R_.at<float>(2,1),R_.at<float>(2,2),t_.at<float>(2,0);
 	return matrix3_4d;
 }
 }

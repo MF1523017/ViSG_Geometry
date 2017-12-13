@@ -66,7 +66,7 @@ bool SLAM::RecoverPose(const FeaturePairs &features_pairs,const IndexesPairs & m
 		auto it = pairs_idx_point3d_.find(idx);
 		if(it != pairs_idx_point3d_.end()){
 			points2.push_back(key_points_ref_[idx].pt);
-			points3.push_back(cvPointd2f(pairs_idx_point3d_[idx]));
+			points3.push_back(pairs_idx_point3d_[idx]);
 		}else{
 			new_features_pairs.push_back(features_pairs[i]);
 		}
@@ -84,10 +84,10 @@ void SLAM::RecoverMapPoints(const FeaturePairs &features_pairs, const IndexesPai
 	auto p_pose_cur_ = p_frame_cur_->p_pose();
 	auto p_pose_ref_ = p_frame_ref_->p_pose();
 	p_map_->Triangulation(features_pairs,*p_pose_ref_,*p_pose_cur_,*p_camera_);
-	auto points3d = p_map_->map_points();
+	auto points3d = p_map_->map_points;
 	for(size_t i = 0; i < features_pairs.size(); ++i){
 		pairs_idx_point3d_.insert(std::make_pair(match_pairs[i].first,points3d[i]));
-		map_points_.push_back(cv2eigen_Vector3d(points3d[i]));
+		map_points_.push_back(cv2eigen_Vector3f(points3d[i]));
 	}
 }
 
@@ -100,7 +100,7 @@ void SLAM::UpdateRefFrame(){
 	IndexesPairs match_pairs;
 	Match(features_pairs,match_pairs);
 	pairs_idx_point3d_.clear();
-	auto points3d = p_map_->map_points();
+	auto points3d = p_map_->map_points;
 	for(size_t i = 0 ; i < features_pairs.size(); ++i){
 		pairs_idx_point3d_.insert(std::make_pair(match_pairs[i].second,points3d[i]));
 	}
@@ -140,7 +140,7 @@ bool SLAM::Tracking(){
 */
 void SLAM::Run(Frame::Ptr p_frame){
 	std::cout << "[SLAM::Run] cur frame id: " << p_frame->id() << std::endl;
-	if(p_frame->img().empty()){
+	if(p_frame->img.empty()){
 		std::cout << "[SLAM::run] image error! " << std::endl;
 		return;
 	}
@@ -166,16 +166,16 @@ void SLAM::Run(Frame::Ptr p_frame){
 * @ brief: extract features from the image
 */
 void SLAM::FeatureExtract(Frame::Ptr p_frame){
-	p_feature_->Extract(p_frame->img());
+	p_feature_->Extract(p_frame->img);
 	if(p_frame == p_frame_ref_){
-		key_points_ref_ = p_feature_->key_points();
-		descriptors_ref_ = p_feature_->descriptors();
+		key_points_ref_ = p_feature_->key_points;
+		descriptors_ref_ = p_feature_->descriptors;
 	}else if(p_frame == p_frame_cur_){
-		key_points_cur_ = p_feature_->key_points();
-		descriptors_cur_ = p_feature_->descriptors();
+		key_points_cur_ = p_feature_->key_points;
+		descriptors_cur_ = p_feature_->descriptors;
 	}else if(p_frame == p_frame_pre_){
-		key_points_pre_ = p_feature_->key_points();
-		descriptors_pre_ = p_feature_->descriptors();
+		key_points_pre_ = p_feature_->key_points;
+		descriptors_pre_ = p_feature_->descriptors;
 	}
 }
 
@@ -185,7 +185,7 @@ void SLAM::FeatureExtract(Frame::Ptr p_frame){
 */
 void SLAM::Match(FeaturePairs &features_pairs,IndexesPairs & match_pairs){
 	p_matcher_->Match(descriptors_ref_,descriptors_cur_);
-	auto inlier_matches = p_matcher_->inlier_matches();
+	auto inlier_matches = p_matcher_->inlier_matches;
 	features_pairs.resize(inlier_matches.size());
 	match_pairs.resize(inlier_matches.size());
 	for(size_t i = 0; i < inlier_matches.size(); ++i){
@@ -195,8 +195,8 @@ void SLAM::Match(FeaturePairs &features_pairs,IndexesPairs & match_pairs){
 	cv::Mat img_match, img_good_match;
 	cv::namedWindow("feature match",0);
 	cv::namedWindow("inlier feature match",0);
-	cv::drawMatches(p_frame_ref_->img(),key_points_ref_,p_frame_cur_->img(),key_points_cur_,p_matcher_->matches(),img_match);
-	cv::drawMatches(p_frame_ref_->img(),key_points_ref_,p_frame_cur_->img(),key_points_cur_,p_matcher_->inlier_matches(),img_good_match);
+	cv::drawMatches(p_frame_ref_->img,key_points_ref_,p_frame_cur_->img,key_points_cur_,p_matcher_->matches,img_match);
+	cv::drawMatches(p_frame_ref_->img,key_points_ref_,p_frame_cur_->img,key_points_cur_,p_matcher_->inlier_matches,img_good_match);
 	cv::imshow("feature match" ,img_match);
 	cv::imshow("inlier feature match" ,img_good_match);
 	cv::waitKey(30);

@@ -9,7 +9,7 @@
 
 namespace VISG{
 Frame::Frame(const cv::Mat &img,size_t id,double time_stamp):p_pose_(new Pose),
-img_(img),id_(id),time_stamp_(time_stamp){
+img(img),id_(id),time_stamp_(time_stamp){
 }
 
 }

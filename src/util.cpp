@@ -41,7 +41,7 @@ void video2images(const string &video_name,const string &image_dir){
  * */
 cv::Point2f pixel2cam(const cv::Point2f &p, const cv::Mat & K){
 	cv::Mat KK;
-	K.convertTo(KK,CV_32FC1);
+	K.convertTo(KK,CV_32F);
 	return cv::Point2f(
 			(static_cast<float>(p.x) - KK.at<float>(0,2)) / KK.at<float>(0,0),
 			(static_cast<float>(p.y) - KK.at<float>(1,2)) / KK.at<float>(1,1)
@@ -52,12 +52,12 @@ cv::Point2f pixel2cam(const cv::Point2f &p, const cv::Mat & K){
  *
  * */
 cv::Mat cvMatrix3_4(const Pose &pose){
-	cv::Mat R = pose.R();
-	cv::Mat t = pose.t();
-	return (cv::Mat_<double>(3,4) <<
-			R.at<double>(0,0),R.at<double>(0,1),R.at<double>(0,2),t.at<double>(0,0),
-			R.at<double>(1,0),R.at<double>(1,1),R.at<double>(1,2),t.at<double>(1,0),
-			R.at<double>(2,0),R.at<double>(2,1),R.at<double>(2,2),t.at<double>(2,0));
+	cv::Mat R = pose.cRw.clone();
+	cv::Mat t = pose.ctw.clone();
+	return (cv::Mat_<float>(3,4) <<
+			R.at<float>(0,0),R.at<float>(0,1),R.at<float>(0,2),t.at<float>(0,0),
+			R.at<float>(1,0),R.at<float>(1,1),R.at<float>(1,2),t.at<float>(1,0),
+			R.at<float>(2,0),R.at<float>(2,1),R.at<float>(2,2),t.at<float>(2,0));
 }
 
 /*
@@ -79,17 +79,10 @@ double parallax(const FeaturePairs & features_pairs){
 /*
 * @brief convert cv::Point3d to Eigen::Vector3d
 */
-Eigen::Vector3d cv2eigen_Vector3d(const cv::Point3d &p){
-	return Eigen::Vector3d(p.x, p.y, p.z);
+Eigen::Vector3f cv2eigen_Vector3f(const cv::Point3f &p){
+	return Eigen::Vector3f(p.x, p.y, p.z);
 }
 
-/*
-* @brief: convert cv::Point3d to cv::Point3f
-*/
-cv::Point3f cvPointd2f(const cv::Point3d &p){
-	return cv::Point3f(static_cast<float>(p.x),
-										static_cast<float>(p.y),
-										static_cast<float>(p.z));
-}
+
 
 }

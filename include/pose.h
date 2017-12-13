@@ -20,8 +20,8 @@ public:
 	using Ptr = std::shared_ptr<Pose>;
 	Pose();
 	Pose(const cv::Mat &R,const cv::Mat &t){
-		R.copyTo(R_);
-		t.copyTo(t_);
+		R.copyTo(cRw);
+		t.copyTo(ctw);
 	}
 	bool Estimate(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const Camera &cam,cv::Mat &inliers);
 	bool Estimate(const KeyPoints &key_points1,
@@ -33,26 +33,16 @@ public:
 	bool Estimate(FeaturePairs &features_pairs,const Camera &cam);
 	bool Estimate(const std::vector<cv::Point2f> &points2,const std::vector<cv::Point3f> &points3,const Camera &cam);
 	bool Estimate(const PnP &pnp,const Camera &cam);
-	cv::Mat R()const {
-		return R_;
-	}
-	cv::Mat Rvec() const{
-		cv::Mat Rvec_;
-		cv::Rodrigues(R_,Rvec_);
-		return Rvec_;
-	}
-	cv::Mat t()const {
-		return t_;
-	}
+
 	cv::Mat cvPoseMatrix3_4()const;
-	Eigen::Matrix3d EigenR()const;
-	Eigen::Vector3d Eigent()const;
-	Eigen::Matrix<double,3,4> EigenPoseMatrix3_4()const;
+	Eigen::Matrix3f EigenR()const;
+	Eigen::Vector3f Eigent()const;
+	Eigen::Matrix<float,3,4> EigenPoseMatrix3_4()const;
 
-private:
+public:
 
-	cv::Mat R_;//3*3 matrix
-	cv::Mat t_;
+	cv::Mat cRw;//3*3 matrix
+	cv::Mat ctw;
 };
 
 

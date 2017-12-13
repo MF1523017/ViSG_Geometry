@@ -36,7 +36,7 @@ public:
 	bool Tracking();
 	bool Init();
 	void UpdateRefFrame();
-	std::vector<Eigen::Vector3d> map_points()const{
+	std::vector<Eigen::Vector3f> map_points()const{
 		return map_points_;
 	}
 private:
@@ -58,7 +58,7 @@ private:
 	cv::Mat descriptors_pre_;
 	// Pairs2d_3d pairs2_3_;
 	PairsIdxPoint3d pairs_idx_point3d_;
-	std::vector<Eigen::Vector3d> map_points_;
+	std::vector<Eigen::Vector3f> map_points_;
 	// std::vector<KeyPoints> all_key_points_;
 	// std::vector<cv::Mat> all_descriptors_;
 };

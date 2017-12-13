@@ -33,7 +33,7 @@
 using FeaturePairs = std::vector<std::pair<cv::KeyPoint,cv::KeyPoint>>;
 using KeyPoints = std::vector<cv::KeyPoint>;
 using DMatches = std::vector<cv::DMatch>;
-using PairsIdxPoint3d = std::map<size_t,cv::Point3d>;
+using PairsIdxPoint3d = std::map<size_t,cv::Point3f>;
 // using Pairs2d_3d = std::map<cv::KeyPoint,cv::Point3d>;
 using IndexesPairs = std::vector<std::pair<size_t,size_t>>;
 using PnP = std::vector<std::pair<cv::Point2f,cv::Point3f>>;//2d_3d

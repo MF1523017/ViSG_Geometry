@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: camera.h
 	> Author: lipei
-	> Mail: b111180082@163.com 
+	> Mail: b111180082@163.com
 	> Created Time: 2017年09月11日 星期一 17时24分44秒
  ************************************************************************/
 
@@ -13,20 +13,18 @@ namespace VISG{
 class Camera{
 public:
 	using Ptr = std::shared_ptr<Camera>;
-	Camera(double fx,double fy,double cx,double cy);
+	Camera(float fx,float fy,float cx,float cy);
 	Camera(const Camera &rhs){
 		*this = rhs;
 	}
 	Camera &operator = (const Camera &rhs);
-	cv::Mat K() const {
-		return K_;
-	}
+	cv::Mat K;
 private:
-	cv::Mat K_;
-	double fx_;
-	double fy_;
-	double cx_;
-	double cy_;
+
+	float fx_;
+	float fy_;
+	float cx_;
+	float cy_;
 };
 }
 

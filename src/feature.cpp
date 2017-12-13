@@ -21,14 +21,14 @@
  void Feature::Extract(const cv::Mat &img){
  	if(img.empty())
  		assert(false);
- 	key_points_.clear();//clear old key_points
- 	descriptors_.release();// clear old descriptors
- 	detector_->detect(img,key_points_);
- 	detector_->compute(img, key_points_,descriptors_);
+ 	key_points.clear();//clear old key_points
+ 	descriptors.release();// clear old descriptors
+ 	detector_->detect(img,key_points);
+ 	detector_->compute(img, key_points,descriptors);
 
  #ifdef TEST
  	cv::Mat img_key_points;
- 	cv::drawKeypoints(img,key_points_,img_key_points,cv::Scalar::all(-1),cv::DrawMatchesFlags::DEFAULT);
+ 	cv::drawKeypoints(img,key_points,img_key_points,cv::Scalar::all(-1),cv::DrawMatchesFlags::DEFAULT);
  	cv::namedWindow("keyPoints",0);
  	cv::imshow("keyPoints",img_key_points);
  	while(cv::waitKey()==27);

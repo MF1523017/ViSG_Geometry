@@ -18,16 +18,11 @@ namespace VISG{
 		using Ptr = std::shared_ptr<Matcher>;
 		Matcher();
 		void Match(const cv::Mat &descriptors1,const cv::Mat &descriptors2);
-		DMatches matches() const {
-			return matches_;
-		}
-		DMatches inlier_matches() const {
-			return inlier_matches_;
-		}
 	private:
 		cv::Ptr<cv::DescriptorMatcher> matcher_;
-		DMatches matches_;
-		DMatches inlier_matches_;
+	public:
+		DMatches matches;
+		DMatches inlier_matches;
 	};
 
 

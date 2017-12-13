@@ -15,20 +15,12 @@
 namespace VISG{
 
 class Map{
-
-
 public:
 	using Ptr = std::shared_ptr<Map>;
 	void Triangulation(const FeaturePairs &features_pairs,const Pose &pose1,const Pose &pose2,const Camera &cam);
 	void Triangulation(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const Pose &pose1,const Pose &pose2,const Camera &cam);
 	void Triangulation(const std::vector<cv::Point2f> &points1,const std::vector<cv::Point2f> &points2,const cv::Mat &T1,const cv::Mat &T2);
-	std::vector<cv::Point3f> map_points() const {
-		return map_points_;
-	}
-
-private:
-	std::vector<cv::Point3f> map_points_;
-
+	std::vector<cv::Point3f> map_points;
 };
 
 }

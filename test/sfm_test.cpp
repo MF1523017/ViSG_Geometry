@@ -30,7 +30,7 @@ void savePoints(const string &name,std::vector<Eigen::Vector3d> points){
 }
 
 vector<string> loadImage(const string & file_dir){
-  const string data_file(file_dir + "/data.csv");
+  const string data_file(file_dir + "/data_short.csv");
   ifstream read_images(data_file);
   string line;
   vector<string> images;
@@ -77,9 +77,11 @@ int main(int argc,char **argv){
 	 VISG::Frame::Ptr p_frame(new VISG::Frame(img1,i));
 	 sfm.ExtractMatch(p_frame);
  }
+ cout << "begin init structure!..." << endl;
  sfm.InitStructure();
+ cout << "begin multi view!..." << endl;
  sfm.MultiView();
- savePoints(file_dir + "/pointscloud.txt",sfm.all_map_points());
+ savePoints(file_dir + "/pointscloud.txt",sfm.all_map_points);
  // auto map_points = SALM.map_points();
  // const string points_file("/home/lipei/data/SALM_points.txt");
  // savePoints(points_file,slam.map_points());

@@ -26,9 +26,11 @@ public:
 	void MultiView();
 	void GetPnP(const size_t idx,std::vector<cv::Point2f> &points2,std::vector<cv::Point3f> &points3);
 	void FusionStructure(const size_t idx);
-	MapPoints all_map_points()const{
-		return all_map_points_;
-	}
+public:
+	AllKeyPoints all_key_points;
+	MapPoints all_map_points;
+	std::vector<cv::Mat> rotations;
+	std::vector<cv::Mat> translations;
 	// void
 private:
 	size_t image_count_;
@@ -38,13 +40,12 @@ private:
 	Matcher::Ptr p_matcher_;
 	Pose::Ptr p_pose_;
 	Map::Ptr p_map_;
-	AllKeyPoints all_key_points_;
+
 	std::vector<AllMatches> all_matches_;// all_matches_[i][j]: the matches between the ith frame and the jth frame
 	AllDescriptors all_descriptors_;
-	MapPoints all_map_points_; // all map points 3d
+	 // all map points 3d
 	std::vector<std::vector<int>> correspond_idx_;// correspond_idx_[i][j]: the index of map_points_ correspondence the ith frame jth feature
-	std::vector<cv::Mat> rotations_;
-	std::vector<cv::Mat> translations_;
+
 };
 }
 

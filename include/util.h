@@ -19,9 +19,7 @@ void video2images(const std::string& video_name,const std::string &image_dir);
 cv::Point2f pixel2cam(const cv::Point2f &p, const cv::Mat & K);
 
 cv::Mat cvMatrix3_4(const Pose &pose);
-Eigen::Vector3d cv2eigen_Vector3d(const cv::Point3d &p);
-
-cv::Point3f cvPointd2f(const cv::Point3d &p);
+Eigen::Vector3f cv2eigen_Vector3f(const cv::Point3f &p);
 
 double parallax(const FeaturePairs & features_pairs);
 

@@ -20,15 +20,15 @@ namespace VISG{
 	void Matcher::Match(const cv::Mat &descriptors1,const cv::Mat &descriptors2){
 		if(descriptors1.type() == descriptors2.type() &&
 				descriptors1.cols == descriptors2.cols){
-			matches_.clear();//clear old match;
-			inlier_matches_.clear();
+			matches.clear();//clear old match;
+			inlier_matches.clear();
 #ifdef USE_ORB
-			matcher_->match(descriptors1,descriptors2,matches_);
-			auto min_dis = (*(min_element(matches_.begin(),matches_.end(),matches_dis_cmp))).distance;
+			matcher_->match(descriptors1,descriptors2,matches);
+			auto min_dis = (*(min_element(matches.begin(),matches.end(),matches_dis_cmp))).distance;
 			// std::cout << "[Matcher ]match::min_dis: " << min_dis << std::endl;
 			for(size_t i = 0; i < matches_.size(); ++i){
-				if(matches_[i].distance <= std::max(static_cast<double>(2 * min_dis) ,30.0)){
-					inlier_matches_.push_back(matches_[i]);
+				if(matches[i].distance <= std::max(static_cast<double>(2 * min_dis) ,30.0)){
+					inlier_matches.push_back(matches[i]);
 				}
 			}
 #endif
@@ -45,11 +45,11 @@ namespace VISG{
 					min_dis = dis;
 			}
 			for(size_t i = 0; i < knn_matches.size(); ++i){
-				matches_.push_back(knn_matches[i][0]);
+				matches.push_back(knn_matches[i][0]);
 				if(knn_matches[i][0].distance > 0.6 * knn_matches[i][1].distance||
 					knn_matches[i][0].distance > 5 * fmax(min_dis,10.0f))
 					continue;
-				inlier_matches_.push_back(knn_matches[i][0]);
+				inlier_matches.push_back(knn_matches[i][0]);
 			}
 #endif
 		}
